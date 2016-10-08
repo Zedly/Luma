@@ -45,6 +45,7 @@ public class ThreadAsyncLazyFileLoader extends Thread {
     }
 
     private void loadCanvasFromFile(final LumaCanvas canvas) {
+        System.out.println("Lazily loading " + canvas.getName());
         try {
             File file = new File(Luma.instance.getDataFolder(), "images/" + canvas.getName() + ".bin");
             if (!file.exists()) {
@@ -76,7 +77,7 @@ public class ThreadAsyncLazyFileLoader extends Thread {
             Synchronizer.add(() -> {
                 canvas.setData(width, height, frames, uncompressedData);
             });
-        } catch (IOException | DataFormatException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
             Synchronizer.add(() -> {
                 canvas.setData(0, 0, 1, null);

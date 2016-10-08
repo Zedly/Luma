@@ -96,11 +96,12 @@ public class CanvasURLLoader extends Thread {
                 CanvasManager.getCanvasByName(name).setData(width, height, frames, data);
                 sendMessage(ChatColor.GOLD + "Successfully changed image!");
             } else {
+                CanvasManager.createCanvasForData(name, data, width, height, frames);
                 sendMessage(ChatColor.GOLD + "Successfully loaded image! " + ChatColor.GRAY + "Use "
                         + ChatColor.ITALIC + "/lu print " + name + ChatColor.GRAY + " to get the created maps");
             }
             writeBlob(name, width, height, frames, data);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             sendMessage(ChatColor.GOLD + "Unable to load image! " + ChatColor.GRAY + ex.getMessage());
         }
     }
@@ -152,12 +153,13 @@ public class CanvasURLLoader extends Thread {
                 images.add(img);
                 break;
             case "image/gif":
-                ImageReader reader = ImageIO.getImageReadersByFormatName("gif").next();
                 ImageInputStream stream = ImageIO.createImageInputStream(contentInput);
+                ImageReader reader = ImageIO.getImageReadersByFormatName("gif").next();
                 reader.setInput(stream);
                 int count = reader.getNumImages(true);
                 System.out.println("Loading " + count + " frames of GIF");
                 for (int index = 0; index < count; index++) {
+                    System.out.println(index + "/" + count);
                     images.add(reader.read(index));
                 }
                 break;

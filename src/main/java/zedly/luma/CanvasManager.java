@@ -52,7 +52,7 @@ public class CanvasManager {
         }
         int baseId = views.get(0).getId();
         ArrayList<LumaMap> newMaps = new ArrayList<>();
-        LumaCanvas canvas = new LumaCanvas(name, baseId, newMaps);
+        LumaCanvas canvas = new LumaCanvas(name, baseId, width, height, newMaps);
         canvas.setData(width, height, frames, data);
         canvas.setDelay(20);
         for (int y = 0; y < height; y++) {
@@ -85,7 +85,7 @@ public class CanvasManager {
      */
     private static void preloadCanvas(String name, int baseId, int width, int height, int delay) {
         ArrayList<LumaMap> newMaps = new ArrayList<>();
-        LumaCanvas canvas = new LumaCanvas(name, baseId, newMaps);
+        LumaCanvas canvas = new LumaCanvas(name, baseId, width, height, newMaps);
         canvas.setDelay(delay);
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
@@ -222,7 +222,7 @@ public class CanvasManager {
                     System.out.println("Map ID claim of image \"" + name + "\" out of bounds. Skipping");
                     continue;
                 }
-                //System.out.println("Loading image: " + name + "@" + baseId + "ff. " + width + "x" + height + " " + delay);
+                System.out.println("Loading image: " + name + "@" + baseId + "ff. " + width + "x" + height + " " + delay);
                 preloadCanvas(name, baseId, width, height, delay);
             } catch (Exception ex) {
                 System.err.println("Invalid canvas entry in the data.yml. Skipping");

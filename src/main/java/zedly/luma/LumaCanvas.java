@@ -30,8 +30,10 @@ public class LumaCanvas {
     private final int baseId;
     private long lastUseTime;
 
-    public LumaCanvas(String name, int baseId, List<LumaMap> maps) {
+    public LumaCanvas(String name, int baseId, int width, int height, List<LumaMap> maps) {
         this.name = name;
+        this.width = width;
+        this.height = height;
         this.baseId = baseId;
         this.maps = maps;
         while (mcc.size() != 0) {
@@ -106,9 +108,6 @@ public class LumaCanvas {
         }
         if (System.currentTimeMillis() - lastUseTime > 1800000) {
             backBuffer = null;
-            width = 0;
-            height = 0;
-            frames = 0;
             frameIndex = 0;
             state = CanvasState.DORMANT;
         }

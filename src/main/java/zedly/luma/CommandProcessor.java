@@ -8,8 +8,11 @@ package zedly.luma;
 import java.util.Arrays;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
 
@@ -26,6 +29,8 @@ public class CommandProcessor {
                 sender.sendMessage(Luma.logo + " Available commands:");
                 sender.sendMessage(ChatColor.GOLD + "/lu create [name] [dims] [URL]");
                 sender.sendMessage(ChatColor.GRAY + "Generates a new image with the given dimensions from the given web resource.");
+                sender.sendMessage(ChatColor.GOLD + "/lu print [name]");
+                sender.sendMessage(ChatColor.GRAY + "Spawns all the maps belonging to an image into your inventory.");
                 sender.sendMessage(ChatColor.GOLD + "/lu set-action [id] [type] {data}");
                 sender.sendMessage(ChatColor.GRAY + "Sets a click action for the given map ID.");
                 sender.sendMessage(ChatColor.GOLD + "/lu set-source [name] [URL]");
@@ -71,6 +76,40 @@ public class CommandProcessor {
                     sender.sendMessage(ChatColor.GOLD + "Example: " + ChatColor.GRAY + "/lu create creeperface 2x2 http://i.imgur.com/KtVdxxX.jpg");
                     sender.sendMessage("");
                     break;
+                case "print":
+                    if (!(sender instanceof Player)) {
+                        sender.sendMessage(ChatColor.GOLD + "Only works ingame!");
+                        break;
+                    }
+                    Player player = (Player) sender;
+                    if (args.length != 2) {
+                        sender.sendMessage(ChatColor.GOLD + "/lu print [name]");
+                        sender.sendMessage(ChatColor.GRAY + "Spawns all the maps belonging to an image into your inventory.");
+                        sender.sendMessage(ChatColor.GOLD + "Example: " + ChatColor.GRAY + "/lu print creeperface");
+                        sender.sendMessage("");
+                        break;
+                    }
+                    if (!CanvasManager.hasCanvasByName(args[1])) {
+                        sender.sendMessage(ChatColor.GOLD + "Image does not exist! " + ChatColor.GRAY + "Use " + ChatColor.ITALIC + "create" + ChatColor.GRAY + " to create it.");
+                        break;
+                    }
+                    LumaCanvas canvas = CanvasManager.getCanvasByName(args[1]);
+                    int requiredSlots = canvas.getWidth() * canvas.getHeight();
+                    int freeSlots = 0;
+                    for (ItemStack stack : player.getInventory().getStorageContents()) {
+                        if (stack == null) {
+                            freeSlots++;
+                        }
+                    }
+                    if (requiredSlots > freeSlots) {
+                        sender.sendMessage(ChatColor.GOLD + "Not enough space! " + ChatColor.GRAY + "You need enough inventory space to hold " + requiredSlots + " items.");
+                        break;
+                    }
+                    for (int i = canvas.getBaseId(); i < canvas.getBaseId() + requiredSlots; i++) {
+                        player.getInventory().addItem(new ItemStack(Material.MAP, 1, (short) i));
+                    }
+                    sender.sendMessage(ChatColor.GOLD + "Maps printed! ");
+                    break;
                 case "set-action":
                     if (args.length < 3) {
                         sender.sendMessage(ChatColor.GOLD + "/lu set-action [id] [type] [data]");
@@ -113,7 +152,7 @@ public class CommandProcessor {
                         sender.sendMessage(ChatColor.GOLD + "Image does not exist! " + ChatColor.GRAY + "Use " + ChatColor.ITALIC + "create" + ChatColor.GRAY + " to create it.");
                         break;
                     }
-                    LumaCanvas canvas = CanvasManager.getCanvasByName(args[1]);
+                    canvas = CanvasManager.getCanvasByName(args[1]);
                     new CanvasURLLoader(sender, canvas, args[3]).start();
                     break;
                 case "set-speed":
