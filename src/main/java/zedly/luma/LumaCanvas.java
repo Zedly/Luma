@@ -30,11 +30,12 @@ public class LumaCanvas {
     private final int baseId;
     private long lastUseTime;
 
-    public LumaCanvas(String name, int baseId, int width, int height, List<LumaMap> maps) {
+    public LumaCanvas(String name, int baseId, int width, int height, int delay, List<LumaMap> maps) {
         this.name = name;
         this.width = width;
         this.height = height;
         this.baseId = baseId;
+        this.delay = delay;
         this.maps = maps;
         while (mcc.size() != 0) {
             mcc.getCursor(0);

@@ -85,9 +85,10 @@ public class CommandProcessor {
                 if (canvas != null) {
                     sender.sendMessage(Luma.logo + " About this image:");
                     sender.sendMessage(ChatColor.GOLD + "  Name: " + ChatColor.GRAY + canvas.getName());
+                    sender.sendMessage(ChatColor.GOLD + "  Loaded: " + ChatColor.GRAY + (canvas.isLoaded() ? ChatColor.GREEN + "Yes" : "No"));
                     sender.sendMessage(ChatColor.GOLD + "  Width: " + ChatColor.GRAY + canvas.getWidth() + " tiles");
                     sender.sendMessage(ChatColor.GOLD + "  Height: " + ChatColor.GRAY + canvas.getHeight() + " tiles");
-                    sender.sendMessage(ChatColor.GOLD + "  Frames: " + ChatColor.GRAY + canvas.getFrames());
+                    sender.sendMessage(ChatColor.GOLD + "  Frames: " + ChatColor.GRAY + (canvas.isLoaded() ? canvas.getFrames() : "Unknown"));
                     sender.sendMessage(ChatColor.GOLD + "  Map IDs: " + ChatColor.GRAY
                             + canvas.getBaseId() + "-" + (canvas.getBaseId() + canvas.getWidth() * canvas.getHeight() - 1)
                             + " (" + (canvas.getWidth() * canvas.getHeight()) + " tiles)");

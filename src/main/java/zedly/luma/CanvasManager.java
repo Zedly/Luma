@@ -52,7 +52,7 @@ public class CanvasManager {
         }
         int baseId = views.get(0).getId();
         ArrayList<LumaMap> newMaps = new ArrayList<>();
-        LumaCanvas canvas = new LumaCanvas(name, baseId, width, height, newMaps);
+        LumaCanvas canvas = new LumaCanvas(name, baseId, width, height, 20, newMaps);
         canvas.setData(width, height, frames, data);
         canvas.setDelay(20);
         for (int y = 0; y < height; y++) {
@@ -85,7 +85,7 @@ public class CanvasManager {
      */
     private static void preloadCanvas(String name, int baseId, int width, int height, int delay) {
         ArrayList<LumaMap> newMaps = new ArrayList<>();
-        LumaCanvas canvas = new LumaCanvas(name, baseId, width, height, newMaps);
+        LumaCanvas canvas = new LumaCanvas(name, baseId, width, height, delay, newMaps);
         canvas.setDelay(delay);
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
