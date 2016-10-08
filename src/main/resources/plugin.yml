@@ -1,0 +1,15 @@
+name: Luma
+main: zedly.luma.Luma
+version: 0.0.1
+author: Zedly
+
+commands:
+  lu:
+    description: Open your Tricorder, switch to a menu.
+    aliases: [luma]
+    usage: /lu [create/changeto/speed/action]
+
+permissions:
+  luma.*:
+    description: Gives access to all subordinate nodes for convenience.
+    
