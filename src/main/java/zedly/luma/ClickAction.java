@@ -25,6 +25,8 @@ public abstract class ClickAction {
                 return new MessageAction(data);
             case "warp":
                 return new WarpAction(data);
+            case "heal":
+                return new HealAction();
         }
         return null;
     }

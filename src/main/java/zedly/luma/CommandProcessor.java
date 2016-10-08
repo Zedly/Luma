@@ -101,7 +101,7 @@ public class CommandProcessor {
                         if(map.hasClickAction()) {
                             hasActions = true;
                             ClickAction ca = map.getClickAction();
-                            sender.sendMessage(ChatColor.GOLD + "    -" + map.getMapId() + ": " + ChatColor.GRAY + ca.getTypeString() + " \"" + ca.getData() + "\"");
+                            sender.sendMessage(ChatColor.GOLD + "    - " + map.getMapId() + ": " + ChatColor.GRAY + ca.getTypeString() + " \"" + ca.getData() + "\"");
                         }
                     }
                     if(!hasActions) {

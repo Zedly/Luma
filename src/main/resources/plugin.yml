@@ -8,8 +8,9 @@ commands:
     description: Open your Tricorder, switch to a menu.
     aliases: [luma]
     usage: /lu [create/changeto/speed/action]
+    permission: luma.luma
 
 permissions:
-  luma.*:
+  luma.luma:
     description: Gives access to all subordinate nodes for convenience.
     
