@@ -52,6 +52,7 @@ public class LumaCanvas {
      * @param output the MapCanvas to draw onto
      */
     public void drawTile(int x, int y, MapCanvas output) {
+        lastUseTime = System.currentTimeMillis();
         output.setCursors(mcc);
         if (state == CanvasState.DORMANT) {
             Luma.lazyFileLoader.addCanvasToLoad(this);
