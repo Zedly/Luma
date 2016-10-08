@@ -5,6 +5,7 @@
  */
 package zedly.luma;
 
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -14,6 +15,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,10 +25,15 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
+import javax.imageio.metadata.IIOMetadata;
+import javax.imageio.metadata.IIOMetadataNode;
 import javax.imageio.stream.ImageInputStream;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.map.MapPalette;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import zedly.luma.HTTP.HTTPResponse;
 
 /**
@@ -153,15 +160,7 @@ public class CanvasURLLoader extends Thread {
                 images.add(img);
                 break;
             case "image/gif":
-                ImageInputStream stream = ImageIO.createImageInputStream(contentInput);
-                ImageReader reader = ImageIO.getImageReadersByFormatName("gif").next();
-                reader.setInput(stream);
-                int count = reader.getNumImages(true);
-                System.out.println("Loading " + count + " frames of GIF");
-                for (int index = 0; index < count; index++) {
-                    System.out.println(index + "/" + count);
-                    images.add(reader.read(index));
-                }
+                images.addAll(GifUtil.readGif(contentInput));
                 break;
             case "application/zip":
                 HashMap<String, byte[]> imageFiles = new HashMap<>();
@@ -205,6 +204,10 @@ public class CanvasURLLoader extends Thread {
                 } catch (IOException ex) {
                     return images;
                 }
+            default:
+                sendMessage(ChatColor.GOLD + "Unknown file format! " + ChatColor.GRAY + "Make sure you are pasting a deep link. These usually contain a picture file ending");
+                return images;
+                
         }
         return images;
     }
@@ -266,5 +269,4 @@ public class CanvasURLLoader extends Thread {
         fos.flush();
         fos.close();
     }
-
 }

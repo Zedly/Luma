@@ -6,6 +6,8 @@
 package zedly.luma;
 
 import java.awt.image.BufferedImage;
+import java.io.DataInputStream;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -32,13 +34,7 @@ public class Luma extends JavaPlugin {
         instance = this;
         saveDefaultConfig();
 
-        /*
-        if(!Storage.loadResources() || !setUp()) {
-            System.err.println("Could not load internal resources. Not starting!");
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
-        }
-         */
+        loadResources();
         CanvasManager.loadDataYml();
         int taskid = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, Synchronizer.instance(), 1, 1);
         Synchronizer.setTaskId(taskid);
@@ -50,11 +46,6 @@ public class Luma extends JavaPlugin {
         }, 1, 1);
 
         /*
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
-            while (!Storage.synchQueue.isEmpty()) {
-                Storage.synchQueue.poll().run();
-            }
-        }, 1, 1);
         Bukkit.getPluginManager().registerEvents(Tricorder.getWatcher(), this);
          */
     }
@@ -85,6 +76,19 @@ public class Luma extends JavaPlugin {
                     }
                 }
             }
+            
+            byte[] temp = new byte[16384];
+            DataInputStream dis = new DataInputStream(Luma.class.getResourceAsStream("/error"));
+            dis.readFully(temp);
+            dis.close();
+            brokenFileIcon = new LumaCanvas("Error", 1, 1, 1, new ArrayList<>());
+            brokenFileIcon.setData(1, 1, 1, temp);
+
+            temp = new byte[65536];
+            dis = new DataInputStream(Luma.class.getResourceAsStream("/loading"));
+            dis.readFully(temp);
+            brokenFileIcon = new LumaCanvas("Loading", 1, 1, 4, new ArrayList<>());
+            brokenFileIcon.setData(1, 1, 4, temp);
         } catch (Exception ex) {
             return false;
         }

@@ -58,10 +58,10 @@ public class LumaCanvas {
             Luma.lazyFileLoader.addCanvasToLoad(this);
             state = CanvasState.LOADING;
         } else if (state == CanvasState.LOADING) {
-            //Luma.loadingIcon.drawTile(0, 0, output);
+            Luma.loadingIcon.drawTile(0, 0, output);
         } else if (backBuffer == null
                 || x < 0 || y < 0 || x >= width || y >= height) {
-            //Luma.brokenFileIcon.drawTile(0, 0, output);
+            Luma.brokenFileIcon.drawTile(0, 0, output);
         } else {
             int bufferOffset = 16384 * (width * (height * frameIndex + y) + x);
             for (int i = 0; i < 16384; i++) {
@@ -180,6 +180,15 @@ public class LumaCanvas {
      */
     public int getDelay() {
         return delay;
+    }
+
+    /**
+     * Returns whether or not this canvas is loaded.
+     * If it has not been viewed for a while, it returns to the dormant state to save memory.
+     * @return true if the data belonging to this image is in memory.
+     */
+    public boolean isLoaded() {
+        return state != CanvasState.DORMANT;
     }
 
     public List<LumaMap> getMaps() {

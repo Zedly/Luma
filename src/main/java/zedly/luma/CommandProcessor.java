@@ -6,15 +6,12 @@
 package zedly.luma;
 
 import java.util.Arrays;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.map.MapRenderer;
-import org.bukkit.map.MapView;
 
 /**
  * Chat-based user interaction
@@ -27,16 +24,11 @@ public class CommandProcessor {
         if (args.length == 0) {
             sender.sendMessage(Luma.logo + " Available commands:");
             sender.sendMessage(ChatColor.GOLD + "/lu create [name] [dims] [URL]");
-            sender.sendMessage(ChatColor.GRAY + "Generates a new image with the given dimensions from the given web resource.");
+            sender.sendMessage(ChatColor.GOLD + "/lu info ([name])");
             sender.sendMessage(ChatColor.GOLD + "/lu print [name]");
-            sender.sendMessage(ChatColor.GRAY + "Spawns all the maps belonging to an image into your inventory.");
             sender.sendMessage(ChatColor.GOLD + "/lu set-action [id] [type] {data}");
-            sender.sendMessage(ChatColor.GRAY + "Sets a click action for the given map ID.");
             sender.sendMessage(ChatColor.GOLD + "/lu set-source [name] [URL]");
-            sender.sendMessage(ChatColor.GRAY + "Assigns a new resource to the given image.");
-            sender.sendMessage(ChatColor.GRAY + "Aspect ratio cannot be changed!");
             sender.sendMessage(ChatColor.GOLD + "/lu set-speed [name] [speed]");
-            sender.sendMessage(ChatColor.GRAY + "Sets an animation's refresh rate in ticks per frame.");
             sender.sendMessage("");
             return true;
         }
@@ -75,6 +67,41 @@ public class CommandProcessor {
                 sender.sendMessage(ChatColor.GOLD + "Example: " + ChatColor.GRAY + "/lu create creeperface 2x2 http://i.imgur.com/KtVdxxX.jpg");
                 sender.sendMessage("");
                 break;
+            case "info":
+                LumaCanvas canvas = null;
+                if (args.length == 2) {
+                    if (!CanvasManager.hasCanvasByName(args[1])) {
+                        sender.sendMessage(ChatColor.GOLD + "Image does not exist! " + ChatColor.GRAY + "Hold a piece of the picture to get information about it");
+                        break;
+                    }
+                    canvas = CanvasManager.getCanvasByName(args[1]);
+                } else if (sender instanceof Player) {
+                    Player player = (Player) sender;
+                    ItemStack is = player.getInventory().getItemInMainHand();
+                    if (is != null && is.getType() == Material.MAP && CanvasManager.hasMapId(is.getDurability())) {
+                        canvas = CanvasManager.getCanvasByMapId(is.getDurability());
+                    }
+                }
+                if (canvas != null) {
+                    sender.sendMessage(Luma.logo + " About this image:");
+                    sender.sendMessage(ChatColor.GOLD + "Name: " + ChatColor.GRAY + canvas.getName());
+                    sender.sendMessage(ChatColor.GOLD + "Width: " + ChatColor.GRAY + canvas.getWidth() + " tiles");
+                    sender.sendMessage(ChatColor.GOLD + "Height: " + ChatColor.GRAY + canvas.getHeight() + " tiles");
+                    sender.sendMessage(ChatColor.GOLD + "Frames: " + ChatColor.GRAY + canvas.getFrames());
+                    sender.sendMessage(ChatColor.GOLD + "Map IDs: " + ChatColor.GRAY
+                            + canvas.getBaseId() + "-" + (canvas.getBaseId() + canvas.getWidth() * canvas.getHeight())
+                            + " (" + (canvas.getWidth() * canvas.getHeight()) + " tiles)");
+                    if(canvas.getFrames() > 1) {
+                        sender.sendMessage(ChatColor.GOLD + "Refresh Rate: " + ChatColor.GRAY + canvas.getDelay() + " ticks per frame");
+                    }
+                } else {
+                    sender.sendMessage(ChatColor.GOLD + "/lu info ([name])");
+                    sender.sendMessage(ChatColor.GRAY + "Displays information about an existing image.");
+                    if (sender instanceof Player) {
+                        sender.sendMessage(ChatColor.GRAY + "Hold a part of an image to see information without knowing its name");
+                    }
+                }
+                break;
             case "print":
                 if (!(sender instanceof Player)) {
                     sender.sendMessage(ChatColor.GOLD + "Only works ingame!");
@@ -92,7 +119,7 @@ public class CommandProcessor {
                     sender.sendMessage(ChatColor.GOLD + "Image does not exist! " + ChatColor.GRAY + "Use " + ChatColor.ITALIC + "create" + ChatColor.GRAY + " to create it.");
                     break;
                 }
-                LumaCanvas canvas = CanvasManager.getCanvasByName(args[1]);
+                canvas = CanvasManager.getCanvasByName(args[1]);
                 int requiredSlots = canvas.getWidth() * canvas.getHeight();
                 int freeSlots = 0;
                 for (ItemStack stack : player.getInventory().getStorageContents()) {
@@ -152,7 +179,7 @@ public class CommandProcessor {
                     break;
                 }
                 canvas = CanvasManager.getCanvasByName(args[1]);
-                new CanvasURLLoader(sender, canvas, args[3]).start();
+                new CanvasURLLoader(sender, canvas, args[2]).start();
                 break;
             case "set-speed":
                 if (args.length != 3) {

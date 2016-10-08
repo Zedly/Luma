@@ -123,6 +123,16 @@ public class CanvasManager {
     }
 
     /**
+     * Returns the canvas belonging to the given map ID
+     *
+     * @param mapId the map ID to search
+     * @return the canvas, or null
+     */
+    public static LumaCanvas getCanvasByMapId(int mapId) {
+        return CANVASES_BY_MAP_ID.get(mapId);
+    }
+
+    /**
      * Checks whether this map ID belongs to an existing image
      *
      * @param mapId the map ID to search
