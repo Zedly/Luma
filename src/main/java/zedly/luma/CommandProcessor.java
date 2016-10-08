@@ -85,8 +85,8 @@ public class CommandProcessor {
                 }
                 if (canvas != null) {
                     int width = canvas.getWidth();
-                    int height = canvas.getWidth();
-                    int frames = canvas.getWidth();
+                    int height = canvas.getHeight();
+                    int frames = canvas.getFrames();
                     sender.sendMessage(Luma.logo + " About this image:");
                     sender.sendMessage(ChatColor.GOLD + "  Name: " + ChatColor.GRAY + canvas.getName());
                     sender.sendMessage(ChatColor.GOLD + "  Loaded: " + ChatColor.GRAY + (canvas.isLoaded() ? 
