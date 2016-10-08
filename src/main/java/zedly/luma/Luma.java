@@ -13,6 +13,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -40,7 +41,7 @@ public class Luma extends JavaPlugin {
         Synchronizer.setTaskId(taskid);
         lazyFileLoader = new ThreadAsyncLazyFileLoader();
         lazyFileLoader.start();
-
+        Bukkit.getPluginManager().registerEvents(Watcher.instance(), this);
         CanvasManager.taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
             CanvasManager.advanceFrames();
         }, 1, 1);
@@ -54,6 +55,7 @@ public class Luma extends JavaPlugin {
     public void onDisable() {
         lazyFileLoader.shutdown();
         lazyFileLoader = null;
+        HandlerList.unregisterAll(Watcher.instance());
         Bukkit.getScheduler().cancelTask(Synchronizer.getTaskId());
         Bukkit.getScheduler().cancelTask(CanvasManager.taskId);
     }
