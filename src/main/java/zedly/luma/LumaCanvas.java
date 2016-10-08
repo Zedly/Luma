@@ -89,6 +89,18 @@ public class LumaCanvas {
         }
         state = CanvasState.LOADED;
     }
+    
+    /**
+     * Sets this canvas' data to null, indicating a broken file.
+     */
+    public void setNullData() {
+        this.backBuffer = null;
+        this.frameIndex = 0;
+        for (LumaMap map : maps) {
+            map.forceRedraw();
+        }
+        state = CanvasState.LOADED;
+    }
 
     /**
      * Sets the refresh rate of this canvas in ticks per frame

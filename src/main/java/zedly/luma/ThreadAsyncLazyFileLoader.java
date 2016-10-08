@@ -50,7 +50,7 @@ public class ThreadAsyncLazyFileLoader extends Thread {
             File file = new File(Luma.instance.getDataFolder(), "images/" + canvas.getName() + ".bin");
             if (!file.exists()) {
                 Synchronizer.add(() -> {
-                    canvas.setData(0, 0, 1, null);
+                    canvas.setNullData();
                 });
             }
             int size = (int) file.length();
@@ -61,7 +61,7 @@ public class ThreadAsyncLazyFileLoader extends Thread {
             dis = new DataInputStream(new ByteArrayInputStream(data));
             if (dis.readInt() != Luma.LUMA_MAGIC_CONSTANT) {
                 Synchronizer.add(() -> {
-                    canvas.setData(0, 0, 1, null);
+                    canvas.setNullData();
                 });
                 return;
             }
@@ -80,7 +80,7 @@ public class ThreadAsyncLazyFileLoader extends Thread {
         } catch (Exception ex) {
             ex.printStackTrace();
             Synchronizer.add(() -> {
-                canvas.setData(0, 0, 1, null);
+                canvas.setNullData();
             });
         }
     }
