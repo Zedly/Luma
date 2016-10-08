@@ -30,11 +30,11 @@ public class ThreadAsyncLazyFileLoader extends Thread {
             LumaCanvas canvas;
             while (true) {
                 synchronized (this) {
-                    wait();
+                    while (alive && canvasQueue.isEmpty()) {
+                        wait();
+                    }
                     if (!alive) {
                         return;
-                    } else if (canvasQueue.isEmpty()) {
-                        continue;
                     }
                     canvas = canvasQueue.remove();
                 }
@@ -69,11 +69,11 @@ public class ThreadAsyncLazyFileLoader extends Thread {
             int height = dis.readByte();
             int frames = dis.readInt();
             byte[] uncompressedData = new byte[16384 * width * height * frames];
-            
+
             inflater.reset();
             inflater.setInput(data, 10, data.length - 10);
             inflater.inflate(uncompressedData);
-            
+
             Synchronizer.add(() -> {
                 canvas.setData(width, height, frames, uncompressedData);
             });
