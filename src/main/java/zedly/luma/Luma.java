@@ -7,6 +7,8 @@ package zedly.luma;
 
 import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import org.bukkit.Bukkit;
@@ -33,9 +35,11 @@ public class Luma extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        saveDefaultConfig();
-
-        loadResources();
+        getDataFolder().mkdir();
+        new File(getDataFolder(), "images").mkdir();
+        if(!loadResources()) {
+            Bukkit.getPluginManager().disablePlugin(this);
+        }
         CanvasManager.loadDataYml();
         int taskid = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, Synchronizer.instance(), 1, 1);
         Synchronizer.setTaskId(taskid);
@@ -45,10 +49,6 @@ public class Luma extends JavaPlugin {
         CanvasManager.taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
             CanvasManager.advanceFrames();
         }, 1, 1);
-
-        /*
-        Bukkit.getPluginManager().registerEvents(Tricorder.getWatcher(), this);
-         */
     }
 
     @Override
@@ -78,7 +78,7 @@ public class Luma extends JavaPlugin {
                     }
                 }
             }
-            
+
             byte[] temp = new byte[16384];
             DataInputStream dis = new DataInputStream(Luma.class.getResourceAsStream("/error"));
             dis.readFully(temp);
