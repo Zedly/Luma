@@ -58,6 +58,7 @@ public class CommandProcessor {
                             sender.sendMessage(ChatColor.GOLD + "Invalid dimensions! " + ChatColor.GRAY + " Width and height must be 1-10.");
                             break;
                         }
+                        sender.sendMessage(ChatColor.GOLD + "Loading...");
                         new CanvasURLLoader(sender, args[1], width, height, args[3]).start();
                         break;
                     } catch (NumberFormatException ex) {
@@ -92,9 +93,8 @@ public class CommandProcessor {
                     sender.sendMessage(ChatColor.GOLD + "  Map IDs: " + ChatColor.GRAY
                             + canvas.getBaseId() + "-" + (canvas.getBaseId() + canvas.getWidth() * canvas.getHeight() - 1)
                             + " (" + (canvas.getWidth() * canvas.getHeight()) + " tiles)");
-                    if(canvas.getFrames() > 1) {
-                        sender.sendMessage(ChatColor.GOLD + "  Refresh Rate: " + ChatColor.GRAY + canvas.getDelay() + " ticks per frame");
-                    }
+                    sender.sendMessage(ChatColor.GOLD + "  Refresh Rate: " + ChatColor.GRAY + canvas.getDelay() + " ticks per frame");
+                    sender.sendMessage("");
                 } else {
                     sender.sendMessage(ChatColor.GOLD + "/lu info ([name])");
                     sender.sendMessage(ChatColor.GRAY + "Displays information about an existing image.");
@@ -180,6 +180,7 @@ public class CommandProcessor {
                     break;
                 }
                 canvas = CanvasManager.getCanvasByName(args[1]);
+                sender.sendMessage(ChatColor.GOLD + "Loading...");
                 new CanvasURLLoader(sender, canvas, args[2]).start();
                 break;
             case "set-speed":
@@ -207,6 +208,7 @@ public class CommandProcessor {
                         if (newDelay < 10) {
                             sender.sendMessage(ChatColor.GOLD + "Fast refresh rate! " + ChatColor.GRAY + "This image will skip frames when on a wall.");
                         }
+                        CanvasManager.saveDataYml();
                         sender.sendMessage(ChatColor.GOLD + "Changed refresh rate to " + newDelay + " ticks per frame.");
                         break;
                     }
