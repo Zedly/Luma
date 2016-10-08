@@ -84,22 +84,28 @@ public class CommandProcessor {
                     }
                 }
                 if (canvas != null) {
+                    int width = canvas.getWidth();
+                    int height = canvas.getWidth();
+                    int frames = canvas.getWidth();
                     sender.sendMessage(Luma.logo + " About this image:");
                     sender.sendMessage(ChatColor.GOLD + "  Name: " + ChatColor.GRAY + canvas.getName());
-                    sender.sendMessage(ChatColor.GOLD + "  Loaded: " + ChatColor.GRAY + (canvas.isLoaded() ? ChatColor.GREEN + "Yes" : "No"));
-                    sender.sendMessage(ChatColor.GOLD + "  Width: " + ChatColor.GRAY + canvas.getWidth() + " tiles");
-                    sender.sendMessage(ChatColor.GOLD + "  Height: " + ChatColor.GRAY + canvas.getHeight() + " tiles");
-                    sender.sendMessage(ChatColor.GOLD + "  Frames: " + ChatColor.GRAY + (canvas.isLoaded() ? canvas.getFrames() : "Unknown"));
+                    sender.sendMessage(ChatColor.GOLD + "  Loaded: " + ChatColor.GRAY + (canvas.isLoaded() ? 
+                            ChatColor.GREEN + "Yes " + ChatColor.GRAY + "(" + (16 * width * height * frames) + "K)"  : "No"));
+                    sender.sendMessage(ChatColor.GOLD + "  Size: " + ChatColor.GRAY + width + "x" + height + " tiles" + (canvas.isLoaded() ? ", " + frames + " frames" : ""));
                     sender.sendMessage(ChatColor.GOLD + "  Map IDs: " + ChatColor.GRAY
-                            + canvas.getBaseId() + "-" + (canvas.getBaseId() + canvas.getWidth() * canvas.getHeight() - 1)
-                            + " (" + (canvas.getWidth() * canvas.getHeight()) + " tiles)");
+                            + canvas.getBaseId() + "-" + (canvas.getBaseId() + canvas.getWidth() * canvas.getHeight() - 1));
                     sender.sendMessage(ChatColor.GOLD + "  Refresh Rate: " + ChatColor.GRAY + canvas.getDelay() + " ticks per frame");
                     sender.sendMessage(ChatColor.GOLD + "  Click Actions: ");
+                    boolean hasActions = false;
                     for(LumaMap map : canvas.getMaps()) {
                         if(map.hasClickAction()) {
+                            hasActions = true;
                             ClickAction ca = map.getClickAction();
                             sender.sendMessage(ChatColor.GOLD + "    -" + map.getMapId() + ": " + ChatColor.GRAY + ca.getTypeString() + " \"" + ca.getData() + "\"");
                         }
+                    }
+                    if(!hasActions) {
+                        sender.sendMessage(ChatColor.GRAY + "    (None)");
                     }
                     
                     sender.sendMessage("");
