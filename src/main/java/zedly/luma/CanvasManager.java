@@ -250,7 +250,7 @@ public class CanvasManager {
                     continue;
                 }
                 LumaMap lumaMap = getMapById(mapId);
-                //lumaMap.setAction(ClickAction.generate(name, data));
+                lumaMap.setAction(ClickAction.generate(name, data));
             } catch (Exception ex) {
                 System.err.println("Invalid canvas entry in the data.yml. Skipping");
                 ex.printStackTrace();
@@ -277,6 +277,7 @@ public class CanvasManager {
                 if (map.hasClickAction()) {
                     ClickAction ca = map.getClickAction();
                     HashMap<String, Object> clickActionParams = new HashMap<>();
+                    clickActionParams.put("mapId", map.getMapId());
                     clickActionParams.put("type", ca.getTypeString());
                     clickActionParams.put("data", ca.getData());
                     actionList.add(clickActionParams);

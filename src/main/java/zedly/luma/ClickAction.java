@@ -25,6 +25,14 @@ public abstract class ClickAction {
         }
         return null;
     }
+    
+    public static ClickAction generate(String type, String data) {
+        switch (type) {
+            case "message":
+                return new MessageAction(data.split(" "));
+        }
+        return null;
+    }
 
     public abstract void run(PlayerInteractEntityEvent evt);
 

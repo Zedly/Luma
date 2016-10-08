@@ -94,6 +94,14 @@ public class CommandProcessor {
                             + canvas.getBaseId() + "-" + (canvas.getBaseId() + canvas.getWidth() * canvas.getHeight() - 1)
                             + " (" + (canvas.getWidth() * canvas.getHeight()) + " tiles)");
                     sender.sendMessage(ChatColor.GOLD + "  Refresh Rate: " + ChatColor.GRAY + canvas.getDelay() + " ticks per frame");
+                    sender.sendMessage(ChatColor.GOLD + "  Click Actions: ");
+                    for(LumaMap map : canvas.getMaps()) {
+                        if(map.hasClickAction()) {
+                            ClickAction ca = map.getClickAction();
+                            sender.sendMessage(ChatColor.GOLD + "    -" + map.getMapId() + ": " + ChatColor.GRAY + ca.getTypeString() + " \"" + ca.getData() + "\"");
+                        }
+                    }
+                    
                     sender.sendMessage("");
                 } else {
                     sender.sendMessage(ChatColor.GOLD + "/lu info ([name])");
@@ -149,7 +157,7 @@ public class CommandProcessor {
                     int mapId = Integer.parseInt(args[1]);
                     if (CanvasManager.hasMapId(mapId)) {
                         LumaMap lumaMap = CanvasManager.getMapById(mapId);
-                        ClickAction action = ClickAction.generate(args[2], Arrays.copyOfRange(args, 3, args.length - 3));
+                        ClickAction action = ClickAction.generate(args[2], Arrays.copyOfRange(args, 3, args.length));
                         if (action != null) {
                             lumaMap.setAction(action);
                             CanvasManager.saveDataYml();
