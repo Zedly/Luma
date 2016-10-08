@@ -19,7 +19,7 @@ public abstract class ClickAction {
     private static final HashMap<String, Class<? extends ClickAction>> SUBCLASS_TYPES = new HashMap<>();
 
     public static ClickAction generate(String type, String[] data) {
-        switch (type) {
+        switch (type.toLowerCase()) {
             case "message":
                 return new MessageAction(data);
         }

@@ -34,6 +34,7 @@ public class Watcher implements Listener {
             ItemFrame itemFrame = (ItemFrame) evt.getRightClicked();
             ItemStack stack = itemFrame.getItem();
             if (stack != null && stack.getType() == Material.MAP && CanvasManager.hasMapId(stack.getDurability())) {
+                evt.setCancelled(true);
                 LumaMap lumaMap = CanvasManager.getMapById(stack.getDurability());
                 if (lumaMap.hasClickAction()) {
                     lumaMap.clickAction(evt);
