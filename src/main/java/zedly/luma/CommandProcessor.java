@@ -101,11 +101,13 @@ public class CommandProcessor {
                     sender.sendMessage(ChatColor.GOLD + "  Name: " + ChatColor.GRAY + canvas.getName());
                     sender.sendMessage(ChatColor.GOLD + "  Loaded: " + ChatColor.GRAY + (canvas.isLoaded()
                             ? ChatColor.GREEN + "Yes " + ChatColor.GRAY + "(" + (16 * width * height * frames) + "K)" : "No"));
-                    sender.sendMessage(ChatColor.GOLD + "  Size: " + ChatColor.GRAY + width + "x" + height + " tiles" 
-                            + (canvas.isLoaded() && canvas.getFrames() != 1 ? ", " + frames + " frames" : ""));
+                    sender.sendMessage(ChatColor.GOLD + "  Size: " + ChatColor.GRAY + width + "x" + height + " tiles"
+                            + (canvas.isLoaded() && canvas.getFrames() > 1 ? ", " + frames + " frames" : ""));
                     sender.sendMessage(ChatColor.GOLD + "  Map IDs: " + ChatColor.GRAY
                             + canvas.getBaseId() + "-" + (canvas.getBaseId() + canvas.getWidth() * canvas.getHeight() - 1));
-                    sender.sendMessage(ChatColor.GOLD + "  Refresh Rate: " + ChatColor.GRAY + canvas.getDelay() + " ticks per frame");
+                    if (canvas.getFrames() > 1) {
+                        sender.sendMessage(ChatColor.GOLD + "  Refresh Rate: " + ChatColor.GRAY + canvas.getDelay() + " ticks per frame");
+                    }
                     sender.sendMessage(ChatColor.GOLD + "  Click Actions: ");
                     boolean hasActions = false;
                     for (LumaMap map : canvas.getMaps()) {
@@ -271,8 +273,8 @@ public class CommandProcessor {
                         + (Math.round(CanvasManager.getNetMemoryLoad() / 100000.0) / 10.0) + "M");
 
                 long cpu = (LoadStatistics.averageCanvasDrawNanos() + LoadStatistics.averageFrameAdvanceNanos());
-                sender.sendMessage(ChatColor.GOLD + "  CPU (est.): " + ChatColor.GRAY 
-                        + (Math.round(cpu / 1e4) / 100.0) + "ms/tick (" 
+                sender.sendMessage(ChatColor.GOLD + "  CPU (est.): " + ChatColor.GRAY
+                        + (Math.round(cpu / 1e4) / 100.0) + "ms/tick ("
                         + (Math.round(cpu / 5e3) / 100.0) + "%)");
                 sender.sendMessage("");
                 break;
