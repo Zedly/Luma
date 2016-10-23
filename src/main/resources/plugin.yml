@@ -1,6 +1,6 @@
 name: Luma
 main: zedly.luma.Luma
-version: 0.0.1
+version: 1.1.0
 author: Zedly
 
 commands:

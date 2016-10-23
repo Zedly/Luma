@@ -261,22 +261,23 @@ public class CommandProcessor {
             case "stats":
                 sender.sendMessage(Luma.logo + " Load statistics:");
                 sender.sendMessage(ChatColor.GOLD + "  Images: " + ChatColor.GRAY + CanvasManager.getNumberOfCanvases()
-                        + "(" + CanvasManager.getNumberOfLoadedCanvases() + " loaded)");
+                        + " (" + CanvasManager.getNumberOfLoadedCanvases() + " loaded)");
                 sender.sendMessage(ChatColor.GOLD + "  Tiles: " + ChatColor.GRAY + CanvasManager.getNumberOfTiles()
-                        + "(" + CanvasManager.getNumberOfLoadedTiles() + " loaded)");
+                        + " (" + CanvasManager.getNumberOfLoadedTiles() + " loaded)");
                 sender.sendMessage(ChatColor.GOLD + "  RAM (est.): " + ChatColor.GRAY 
                         + (Math.round(CanvasManager.getNetMemoryLoad() / 100000.0) / 10.0) + "M");
                 
                 long cpu = LoadStatistics.averageCanvasDrawNanos() * LoadStatistics.averageCumulativeFPS()
-                        + LoadStatistics.averageFrameAdvanceNanos();
+                        + LoadStatistics.averageFrameAdvanceNanos() / 1000;
                 
-                sender.sendMessage(ChatColor.GOLD + "  CPU (est.): " + ChatColor.GRAY + cpu + "ns/tick (" + (int) (cpu / 5e5) + "%)");
+                sender.sendMessage(ChatColor.GOLD + "  CPU (est.): " + ChatColor.GRAY + cpu / 1000 + "ms/tick (" + (int) (cpu / 500) + "%)");
                 sender.sendMessage(ChatColor.DARK_GRAY + "  -" + ChatColor.GRAY + "canvasDraw: "
-                        + LoadStatistics.averageCanvasDrawNanos() + "ns");
+                        + LoadStatistics.averageCanvasDrawNanos() + "µs");
                 sender.sendMessage(ChatColor.DARK_GRAY + "  -" + ChatColor.GRAY + "frameAdvance: "
                         + LoadStatistics.averageFrameAdvanceNanos() + "ns");
                 sender.sendMessage(ChatColor.DARK_GRAY + "  -" + ChatColor.GRAY + "fps cum.: "
                         + LoadStatistics.averageCumulativeFPS());
+                sender.sendMessage("");
                 break;
         }
 
