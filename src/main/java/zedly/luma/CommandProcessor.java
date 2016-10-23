@@ -264,7 +264,8 @@ public class CommandProcessor {
                         + " (" + CanvasManager.getNumberOfLoadedCanvases() + " loaded)");
                 sender.sendMessage(ChatColor.GOLD + "  Tiles: " + ChatColor.GRAY + CanvasManager.getNumberOfTiles()
                         + " (" + CanvasManager.getNumberOfLoadedTiles() + " loaded)");
-                sender.sendMessage(ChatColor.GOLD + "  FPS (cum.): " + LoadStatistics.averageCumulativeFPS());
+                sender.sendMessage(ChatColor.GOLD + "  FPS (cum.): " + ChatColor.GRAY
+                        + LoadStatistics.averageCumulativeFPS());
                 sender.sendMessage(ChatColor.GOLD + "  RAM (est.): " + ChatColor.GRAY
                         + (Math.round(CanvasManager.getNetMemoryLoad() / 100000.0) / 10.0) + "M");
 

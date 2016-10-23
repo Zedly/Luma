@@ -32,7 +32,7 @@ public class CommandAction extends ClickAction {
 
     @Override
     public String getData() {
-        return "/" + command;
+        return command;
     }
 
     public void run(Player player, ItemFrame itemFrame) {
