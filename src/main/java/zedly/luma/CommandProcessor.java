@@ -10,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -72,7 +73,7 @@ public class CommandProcessor {
                 LumaCanvas canvas = null;
                 if (args.length == 2) {
                     if (!CanvasManager.hasCanvasByName(args[1])) {
-                        sender.sendMessage(ChatColor.GOLD + "Image does not exist! " + ChatColor.GRAY + "Hold a piece of the picture to get information about it");
+                        sender.sendMessage(ChatColor.GOLD + "Image does not exist! " + ChatColor.GRAY + "Hold a piece of the picture or look at the picture to get information about it");
                         break;
                     }
                     canvas = CanvasManager.getCanvasByName(args[1]);
@@ -81,6 +82,14 @@ public class CommandProcessor {
                     ItemStack is = player.getInventory().getItemInMainHand();
                     if (is != null && is.getType() == Material.MAP && CanvasManager.hasMapId(is.getDurability())) {
                         canvas = CanvasManager.getCanvasByMapId(is.getDurability());
+                    } else {
+                        ItemFrame itemFrame = LongRangeAimUtil.getMapInView(player);
+                        if (itemFrame != null) {
+                            is = itemFrame.getItem();
+                            if (is != null && is.getType() == Material.MAP && CanvasManager.hasMapId(is.getDurability())) {
+                                canvas = CanvasManager.getCanvasByMapId(is.getDurability());
+                            }
+                        }
                     }
                 }
                 if (canvas != null) {
@@ -89,31 +98,31 @@ public class CommandProcessor {
                     int frames = canvas.getFrames();
                     sender.sendMessage(Luma.logo + " About this image:");
                     sender.sendMessage(ChatColor.GOLD + "  Name: " + ChatColor.GRAY + canvas.getName());
-                    sender.sendMessage(ChatColor.GOLD + "  Loaded: " + ChatColor.GRAY + (canvas.isLoaded() ? 
-                            ChatColor.GREEN + "Yes " + ChatColor.GRAY + "(" + (16 * width * height * frames) + "K)"  : "No"));
+                    sender.sendMessage(ChatColor.GOLD + "  Loaded: " + ChatColor.GRAY + (canvas.isLoaded()
+                            ? ChatColor.GREEN + "Yes " + ChatColor.GRAY + "(" + (16 * width * height * frames) + "K)" : "No"));
                     sender.sendMessage(ChatColor.GOLD + "  Size: " + ChatColor.GRAY + width + "x" + height + " tiles" + (canvas.isLoaded() ? ", " + frames + " frames" : ""));
                     sender.sendMessage(ChatColor.GOLD + "  Map IDs: " + ChatColor.GRAY
                             + canvas.getBaseId() + "-" + (canvas.getBaseId() + canvas.getWidth() * canvas.getHeight() - 1));
                     sender.sendMessage(ChatColor.GOLD + "  Refresh Rate: " + ChatColor.GRAY + canvas.getDelay() + " ticks per frame");
                     sender.sendMessage(ChatColor.GOLD + "  Click Actions: ");
                     boolean hasActions = false;
-                    for(LumaMap map : canvas.getMaps()) {
-                        if(map.hasClickAction()) {
+                    for (LumaMap map : canvas.getMaps()) {
+                        if (map.hasClickAction()) {
                             hasActions = true;
                             ClickAction ca = map.getClickAction();
                             sender.sendMessage(ChatColor.GOLD + "    - " + map.getMapId() + ": " + ChatColor.GRAY + ca.getTypeString() + " \"" + ca.getData() + "\"");
                         }
                     }
-                    if(!hasActions) {
+                    if (!hasActions) {
                         sender.sendMessage(ChatColor.GRAY + "    (None)");
                     }
-                    
+
                     sender.sendMessage("");
                 } else {
                     sender.sendMessage(ChatColor.GOLD + "/lu info ([name])");
                     sender.sendMessage(ChatColor.GRAY + "Displays information about an existing image.");
                     if (sender instanceof Player) {
-                        sender.sendMessage(ChatColor.GRAY + "Hold a part of an image to see information without knowing its name");
+                        sender.sendMessage(ChatColor.GRAY + "Hold a part of an image or look at it to see information without knowing its name");
                     }
                 }
                 break;

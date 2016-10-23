@@ -5,12 +5,15 @@
  */
 package zedly.luma;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -37,7 +40,21 @@ public class Watcher implements Listener {
                 evt.setCancelled(true);
                 LumaMap lumaMap = CanvasManager.getMapById(stack.getDurability());
                 if (lumaMap.hasClickAction()) {
-                    lumaMap.clickAction(evt);
+                    lumaMap.clickAction(evt.getPlayer(), itemFrame);
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onItemFrameClick(PlayerInteractEvent evt) {
+        if (evt.getAction() == Action.RIGHT_CLICK_AIR
+                || (evt.getAction() == Action.LEFT_CLICK_AIR && evt.getItem() == null)) {
+            ItemFrame itemFrame = LongRangeAimUtil.getMapInView(evt.getPlayer());
+            if (itemFrame != null) {
+                LumaMap lumaMap = CanvasManager.getMapInItemFrame(itemFrame);
+                if (lumaMap != null) {
+                    lumaMap.clickAction(evt.getPlayer(), itemFrame);
                 }
             }
         }

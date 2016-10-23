@@ -5,6 +5,7 @@
  */
 package zedly.luma;
 
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.potion.PotionEffect;
@@ -29,8 +30,7 @@ public class HealAction extends ClickAction {
         return "";
     }
 
-    public void run(PlayerInteractEntityEvent evt) {
-        Player player = evt.getPlayer();
+    public void run(Player player, ItemFrame itemFrame) {
         player.setHealth(20);
         player.setFoodLevel(20);
         player.setSaturation(5);

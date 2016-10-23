@@ -5,9 +5,9 @@
  */
 package zedly.luma;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.entity.ItemFrame;
+import org.bukkit.entity.Player;
 
 /**
  * Basically a Runnable called when a user interacts with a map that has a click
@@ -21,12 +21,15 @@ public abstract class ClickAction {
 
     public static ClickAction generate(String type, String[] data) {
         switch (type.toLowerCase()) {
+            case "command":
+                return new CommandAction(data);
+            case "heal":
+                return new HealAction();
             case "message":
                 return new MessageAction(data);
             case "warp":
                 return new WarpAction(data);
-            case "heal":
-                return new HealAction();
+            
         }
         return null;
     }
@@ -35,7 +38,7 @@ public abstract class ClickAction {
         return generate(type, data.split(" "));
     }
 
-    public abstract void run(PlayerInteractEntityEvent evt);
+    public abstract void run(Player player, ItemFrame itemFrame);
 
     public abstract String getTypeString();
 

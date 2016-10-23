@@ -10,33 +10,33 @@ import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 
 /**
- * A click action that sends a simple message to the user
+ * A click action that runs a basic command for the player clicking.
  * @author Dennis
  */
-public class MessageAction extends ClickAction {
+public class CommandAction extends ClickAction {
 
-    private final String message;
+    private final String command;
 
-    public MessageAction(String[] message) {
+    public CommandAction(String[] message) {
         StringBuilder sb = new StringBuilder();
+        //sb.append("/");
         for (int i = 0; i < message.length; i++) {
             sb.append(message[i].replace("&", ChatColor.COLOR_CHAR + "")).append(" ");
         }
-        this.message = sb.toString();
+        this.command = sb.toString();
     }
 
     @Override
     public String getTypeString() {
-        return "Message";
+        return "Command";
     }
 
     @Override
     public String getData() {
-        return message;
+        return command;
     }
 
     public void run(Player player, ItemFrame itemFrame) {
-        player.sendMessage(message);
+        player.performCommand(command);
     }
-
 }

@@ -12,8 +12,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.ItemFrame;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
 
@@ -150,6 +153,23 @@ public class CanvasManager {
      */
     public static LumaMap getMapById(int mapId) {
         return MAPS_BY_MAP_ID.get(mapId);
+    }
+
+    /**
+     * Returns the LumaMap displayed in this ItemFrame. Returns null if the item
+     * contained is not a registered map.
+     *
+     * @param itemFrame the item frame to search
+     * @return the corresponding LumaMap
+     */
+    public static LumaMap getMapInItemFrame(ItemFrame itemFrame) {
+        ItemStack is = itemFrame.getItem();
+        if (is != null) {
+            if (is.getType() == Material.MAP && hasMapId(is.getDurability())) {
+                return getMapById(is.getDurability());
+            }
+        }
+        return null;
     }
 
     /**

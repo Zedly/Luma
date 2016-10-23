@@ -1,5 +1,6 @@
 package zedly.luma;
 
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.map.*;
@@ -40,9 +41,9 @@ public class LumaMap extends MapRenderer {
         this.action = action;
     }
 
-    public void clickAction(PlayerInteractEntityEvent evt) {
+    public void clickAction(Player player, ItemFrame itemFrame) {
         if (action != null) {
-            action.run(evt);
+            action.run(player, itemFrame);
         }
     }
 

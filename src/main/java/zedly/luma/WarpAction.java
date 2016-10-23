@@ -13,6 +13,8 @@ import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.entity.ItemFrame;
+import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.plugin.Plugin;
 
@@ -48,13 +50,13 @@ public class WarpAction extends ClickAction {
         return warpName;
     }
 
-    public void run(PlayerInteractEntityEvent evt) {
+    public void run(Player player, ItemFrame itemFrame) {
         if (es == null) {
             return;
         }
         try {
             Location warpLocation = es.getWarps().getWarp(warpName);
-            evt.getPlayer().teleport(warpLocation);
+            player.teleport(warpLocation);
         } catch (WarpNotFoundException ex) {
         } catch (net.ess3.api.InvalidWorldException ex) {
             Logger.getLogger(WarpAction.class.getName()).log(Level.SEVERE, null, ex);
