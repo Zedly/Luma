@@ -272,11 +272,11 @@ public class CommandProcessor {
                 sender.sendMessage(ChatColor.GOLD + "  CPU (est.): " + ChatColor.GRAY 
                         + (Math.round(cpu / 1e4) / 100.0) + "ms/tick (" 
                         + (Math.round(cpu / 5e3) / 100.0) + "%)");
-                sender.sendMessage(ChatColor.DARK_GRAY + "  -" + ChatColor.GRAY + "canvasDraw: "
+                sender.sendMessage(ChatColor.DARK_GRAY + "   -" + ChatColor.GRAY + " canvasDraw: "
                         + LoadStatistics.averageCanvasDrawNanos() + "ns");
-                sender.sendMessage(ChatColor.DARK_GRAY + "  -" + ChatColor.GRAY + "frameAdvance: "
+                sender.sendMessage(ChatColor.DARK_GRAY + "   -" + ChatColor.GRAY + " frameAdvance: "
                         + LoadStatistics.averageFrameAdvanceNanos() + "ns");
-                sender.sendMessage(ChatColor.DARK_GRAY + "  -" + ChatColor.GRAY + "fps cum.: "
+                sender.sendMessage(ChatColor.DARK_GRAY + "   -" + ChatColor.GRAY + " fps cum.: "
                         + LoadStatistics.averageCumulativeFPS());
                 sender.sendMessage("");
                 break;

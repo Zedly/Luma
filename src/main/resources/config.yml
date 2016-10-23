@@ -6,3 +6,6 @@ image-idle-unload-time: 1800
 
 # Display animations
 animations: true
+
+# Timespan of the load statistics rolling average in seconds
+statistics-average-time: 100

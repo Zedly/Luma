@@ -12,12 +12,9 @@ package zedly.luma;
  * @author Dennis
  */
 public class LoadStatistics {
-
-    private static final LoadStatistics INSTANCE = new LoadStatistics();
-
-    private static final RollingAverage FRAME_ADVANCE_NANOS = new RollingAverage(100);
-    private static final RollingAverage CANVAS_DRAW_NANOS = new RollingAverage(100);
-    private static final RollingAverage CUMULATIVE_FPS = new RollingAverage(100);
+    private static final RollingAverage FRAME_ADVANCE_NANOS = new RollingAverage(Settings.STATISTICS_AVERAGE_TIME);
+    private static final RollingAverage CANVAS_DRAW_NANOS = new RollingAverage(Settings.STATISTICS_AVERAGE_TIME);
+    private static final RollingAverage CUMULATIVE_FPS = new RollingAverage(Settings.STATISTICS_AVERAGE_TIME);
 
     private static long frameCounter = 0;
     private static long canvasDrawNanosCounter = 0;
@@ -46,7 +43,7 @@ public class LoadStatistics {
     }
 
     public static long averageCumulativeFPS() {
-        return CUMULATIVE_FPS.getSum() / 5;
+        return CUMULATIVE_FPS.getSum() * 20 / Settings.STATISTICS_AVERAGE_TIME;
     }
 
     public static void tick() {
