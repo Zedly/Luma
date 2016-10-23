@@ -28,8 +28,11 @@ public class LumaMap extends MapRenderer {
 
     public void render(MapView view, MapCanvas mapCanvas, Player player) {
         if (lumaCanvas.getFrameIndex() != frameIndex) {
+            long nanos = System.nanoTime();
             frameIndex = lumaCanvas.getFrameIndex();
             lumaCanvas.drawTile(x, y, mapCanvas);
+            LoadStatistics.updateCanvasDrawNanos(System.nanoTime() - nanos);
+            LoadStatistics.countFrame();
         }
     }
 

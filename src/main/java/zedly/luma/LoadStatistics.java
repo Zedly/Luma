@@ -15,48 +15,50 @@ public class LoadStatistics {
 
     private static final LoadStatistics INSTANCE = new LoadStatistics();
 
-    private final RollingAverage frameAdvanceAverage = new RollingAverage(100);
-    private final RollingAverage canvasDrawAverage = new RollingAverage(100);
-    private final RollingAverage cumulativeFPSAverage = new RollingAverage(100);
-    private long frameCounter = 0;
+    private static final RollingAverage FRAME_ADVANCE_NANOS = new RollingAverage(100);
+    private static final RollingAverage CANVAS_DRAW_NANOS = new RollingAverage(100);
+    private static final RollingAverage CUMULATIVE_FPS = new RollingAverage(100);
 
-    public static LoadStatistics instance() {
-        return INSTANCE;
+    private static long frameCounter = 0;
+    private static long canvasDrawNanosCounter = 0;
+    private static long frameAdvanceNanosCounter = 0;
+
+    public static int taskId = 0;
+
+    public static void updateFrameAdvanceNanos(long nanos) {
+        frameAdvanceNanosCounter += nanos;
     }
 
-    private LoadStatistics() {
+    public static long averageFrameAdvanceNanos() {
+        return FRAME_ADVANCE_NANOS.getAverage();
     }
 
-    public void updateFrameAdvanceNanos(long nanos) {
-        frameAdvanceAverage.update(nanos);
+    public static void updateCanvasDrawNanos(long nanos) {
+        canvasDrawNanosCounter += nanos;
     }
 
-    public long averageFrameAdvanceNanos() {
-        return frameAdvanceAverage.getAverage();
+    public static long averageCanvasDrawNanos() {
+        return CANVAS_DRAW_NANOS.getAverage();
     }
 
-    public void updateCanvasDrawNanos(long nanos) {
-        canvasDrawAverage.update(nanos);
-    }
-
-    public long averageCanvasDrawNanos() {
-        return canvasDrawAverage.getAverage();
-    }
-
-    public void countFrame() {
+    public static void countFrame() {
         frameCounter++;
     }
 
-    public long averageCumulativeFPS() {
-        return cumulativeFPSAverage.getAverage();
+    public static long averageCumulativeFPS() {
+        return CUMULATIVE_FPS.getSum() / 5;
     }
 
-    public void tick() {
-        cumulativeFPSAverage.update(frameCounter);
+    public static void tick() {
+        CUMULATIVE_FPS.update(frameCounter);
+        FRAME_ADVANCE_NANOS.update(frameAdvanceNanosCounter);
+        CANVAS_DRAW_NANOS.update(canvasDrawNanosCounter);
         frameCounter = 0;
+        frameAdvanceNanosCounter = 0;
+        canvasDrawNanosCounter = 0;
     }
 
-    private class RollingAverage {
+    private static class RollingAverage {
 
         private final long[] ringBuffer;
         private int ringIndex = 0;
@@ -71,11 +73,15 @@ public class LoadStatistics {
         }
 
         public long getAverage() {
-            long average = 0;
+            return getSum() / ringBuffer.length;
+        }
+
+        public long getSum() {
+            long sum = 0;
             for (int i = 0; i < ringBuffer.length; i++) {
-                average += ringBuffer[i];
+                sum += ringBuffer[i];
             }
-            return average / ringBuffer.length;
+            return sum;
         }
     }
 }

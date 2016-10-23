@@ -47,9 +47,8 @@ public class Luma extends JavaPlugin {
         lazyFileLoader = new ThreadAsyncLazyFileLoader();
         lazyFileLoader.start();
         Bukkit.getPluginManager().registerEvents(Watcher.instance(), this);
-        CanvasManager.taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
-            CanvasManager.advanceFrames();
-        }, 1, 1);
+        CanvasManager.taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, CanvasManager::advanceFrames, 1, 1);
+        LoadStatistics.taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, LoadStatistics::tick, 1, 1);
     }
 
     @Override

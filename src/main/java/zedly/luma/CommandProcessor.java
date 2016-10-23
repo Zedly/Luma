@@ -30,6 +30,7 @@ public class CommandProcessor {
             sender.sendMessage(ChatColor.GOLD + "/lu set-action [id] [type] {data}");
             sender.sendMessage(ChatColor.GOLD + "/lu set-source [name] [URL]");
             sender.sendMessage(ChatColor.GOLD + "/lu set-speed [name] [speed]");
+            sender.sendMessage(ChatColor.GOLD + "/lu stats");
             sender.sendMessage("");
             return true;
         }
@@ -256,6 +257,26 @@ public class CommandProcessor {
                 sender.sendMessage(ChatColor.GOLD
                         + "Invalid refresh rate! " + ChatColor.GRAY + "Must be a natural number of ticks (1/20 second)");
 
+                break;
+            case "stats":
+                sender.sendMessage(Luma.logo + " Load statistics:");
+                sender.sendMessage(ChatColor.GOLD + "  Images: " + ChatColor.GRAY + CanvasManager.getNumberOfCanvases()
+                        + "(" + CanvasManager.getNumberOfLoadedCanvases() + " loaded)");
+                sender.sendMessage(ChatColor.GOLD + "  Tiles: " + ChatColor.GRAY + CanvasManager.getNumberOfTiles()
+                        + "(" + CanvasManager.getNumberOfLoadedTiles() + " loaded)");
+                sender.sendMessage(ChatColor.GOLD + "  RAM (est.): " + ChatColor.GRAY 
+                        + (Math.round(CanvasManager.getNetMemoryLoad() / 100000.0) / 10.0) + "M");
+                
+                long cpu = LoadStatistics.averageCanvasDrawNanos() * LoadStatistics.averageCumulativeFPS()
+                        + LoadStatistics.averageFrameAdvanceNanos();
+                
+                sender.sendMessage(ChatColor.GOLD + "  CPU (est.): " + ChatColor.GRAY + cpu + "ns/tick (" + (int) (cpu / 5e5) + "%)");
+                sender.sendMessage(ChatColor.DARK_GRAY + "  -" + ChatColor.GRAY + "canvasDraw: "
+                        + LoadStatistics.averageCanvasDrawNanos() + "ns");
+                sender.sendMessage(ChatColor.DARK_GRAY + "  -" + ChatColor.GRAY + "frameAdvance: "
+                        + LoadStatistics.averageFrameAdvanceNanos() + "ns");
+                sender.sendMessage(ChatColor.DARK_GRAY + "  -" + ChatColor.GRAY + "fps cum.: "
+                        + LoadStatistics.averageCumulativeFPS());
                 break;
         }
 

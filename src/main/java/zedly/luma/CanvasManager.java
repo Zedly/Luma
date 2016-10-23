@@ -31,7 +31,6 @@ public class CanvasManager {
     private static final HashMap<Integer, LumaCanvas> CANVASES_BY_MAP_ID = new HashMap<>();
     private static final HashMap<Integer, LumaMap> MAPS_BY_MAP_ID = new HashMap<>();
     private static final ArrayList<LumaCanvas> CANVASES = new ArrayList<>();
-    private static final LoadStatistics LOAD_STATISTICS = LoadStatistics.instance();
     private static int tickId = 0;
     public static int taskId;
 
@@ -136,6 +135,72 @@ public class CanvasManager {
     }
 
     /**
+     * Returns the number of loaded canvases (with data in RAM)
+     *
+     * @return the number of loaded canvases (with data in RAM)
+     */
+    public static int getNumberOfLoadedCanvases() {
+        int loaded = 0;
+        for (LumaCanvas canvas : CANVASES) {
+            if (canvas.isLoaded()) {
+                loaded++;
+            }
+        }
+        return loaded;
+    }
+
+    /**
+     * Returns the total number of canvases
+     *
+     * @return the total number of canvases
+     */
+    public static int getNumberOfCanvases() {
+        return CANVASES.size();
+    }
+    
+    /**
+     * Returns the number of loaded tiles (with data in RAM)
+     *
+     * @return the number of loaded tiles (with data in RAM)
+     */
+    public static int getNumberOfLoadedTiles() {
+        int tiles = 0;
+        for (LumaCanvas canvas : CANVASES) {
+            if (canvas.isLoaded()) {
+                tiles += canvas.getWidth() * canvas.getHeight();
+            }
+        }
+        return tiles;
+    }
+
+    /**
+     * Returns the total number of tiles (registered map IDs)
+     * @return the total number of tiles (registered map IDs)
+     */
+    public static int getNumberOfTiles() {
+        int tiles = 0;
+        for (LumaCanvas canvas : CANVASES) {
+            tiles += canvas.getWidth() * canvas.getHeight();
+        }
+        return tiles;
+    }
+    
+    /**
+     * Returns an estimate of the net memory load caused by loaded canvases.
+     * Ignores JVM overhead.
+     * @return the number of content bytes
+     */
+    public static int getNetMemoryLoad() {
+        int bytes = 0;
+        for (LumaCanvas canvas : CANVASES) {
+            if (canvas.isLoaded()) {
+                bytes += 16384 * canvas.getWidth() * canvas.getHeight() * canvas.getFrames();
+            }
+        }
+        return bytes;
+    }
+
+    /**
      * Checks whether this map ID belongs to an existing image
      *
      * @param mapId the map ID to search
@@ -200,7 +265,7 @@ public class CanvasManager {
                 canvas.advanceFrame();
             }
         }
-        LOAD_STATISTICS.updateFrameAdvanceNanos(System.nanoTime() - nanos);
+        LoadStatistics.updateFrameAdvanceNanos(System.nanoTime() - nanos);
     }
 
     /**
