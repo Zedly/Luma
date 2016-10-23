@@ -264,15 +264,16 @@ public class CommandProcessor {
                         + " (" + CanvasManager.getNumberOfLoadedCanvases() + " loaded)");
                 sender.sendMessage(ChatColor.GOLD + "  Tiles: " + ChatColor.GRAY + CanvasManager.getNumberOfTiles()
                         + " (" + CanvasManager.getNumberOfLoadedTiles() + " loaded)");
-                sender.sendMessage(ChatColor.GOLD + "  RAM (est.): " + ChatColor.GRAY 
+                sender.sendMessage(ChatColor.GOLD + "  RAM (est.): " + ChatColor.GRAY
                         + (Math.round(CanvasManager.getNetMemoryLoad() / 100000.0) / 10.0) + "M");
-                
-                long cpu = LoadStatistics.averageCanvasDrawNanos() * LoadStatistics.averageCumulativeFPS()
-                        + LoadStatistics.averageFrameAdvanceNanos() / 1000;
-                
-                sender.sendMessage(ChatColor.GOLD + "  CPU (est.): " + ChatColor.GRAY + cpu / 1000 + "ms/tick (" + (int) (cpu / 500) + "%)");
+
+                long cpu = (LoadStatistics.averageCanvasDrawNanos() + LoadStatistics.averageFrameAdvanceNanos());
+
+                sender.sendMessage(ChatColor.GOLD + "  CPU (est.): " + ChatColor.GRAY 
+                        + (Math.round(cpu / 1e4) / 100.0) + "ms/tick (" 
+                        + (Math.round(cpu / 5e3) / 100.0) + "%)");
                 sender.sendMessage(ChatColor.DARK_GRAY + "  -" + ChatColor.GRAY + "canvasDraw: "
-                        + LoadStatistics.averageCanvasDrawNanos() + "µs");
+                        + LoadStatistics.averageCanvasDrawNanos() + "ns");
                 sender.sendMessage(ChatColor.DARK_GRAY + "  -" + ChatColor.GRAY + "frameAdvance: "
                         + LoadStatistics.averageFrameAdvanceNanos() + "ns");
                 sender.sendMessage(ChatColor.DARK_GRAY + "  -" + ChatColor.GRAY + "fps cum.: "
