@@ -92,9 +92,11 @@ public class CanvasURLLoader extends Thread {
             }
 
             byte[] fileData = data;
+            int fileFrames = frames;
             // If animations are disabled, only keep the first frame in memory, but save the full animation
             if (!Settings.ANIMATIONS) {
                 data = Arrays.copyOf(fileData, 16384 * width * height);
+                frames = 1;
             }
 
             if (CanvasManager.hasCanvasByName(name)) {
@@ -105,7 +107,7 @@ public class CanvasURLLoader extends Thread {
                 sendMessage(ChatColor.GOLD + "Successfully loaded image! " + ChatColor.GRAY + "Use "
                         + ChatColor.ITALIC + "/lu print " + name + ChatColor.GRAY + " to get the created maps");
             }
-            writeBlob(name, width, height, frames, fileData);
+            writeBlob(name, width, height, fileFrames, fileData);
         } catch (Exception ex) {
             sendMessage(ChatColor.GOLD + "Unable to load image! " + ChatColor.GRAY + ex.getMessage());
         }

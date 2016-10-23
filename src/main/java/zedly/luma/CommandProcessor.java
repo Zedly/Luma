@@ -101,7 +101,8 @@ public class CommandProcessor {
                     sender.sendMessage(ChatColor.GOLD + "  Name: " + ChatColor.GRAY + canvas.getName());
                     sender.sendMessage(ChatColor.GOLD + "  Loaded: " + ChatColor.GRAY + (canvas.isLoaded()
                             ? ChatColor.GREEN + "Yes " + ChatColor.GRAY + "(" + (16 * width * height * frames) + "K)" : "No"));
-                    sender.sendMessage(ChatColor.GOLD + "  Size: " + ChatColor.GRAY + width + "x" + height + " tiles" + (canvas.isLoaded() ? ", " + frames + " frames" : ""));
+                    sender.sendMessage(ChatColor.GOLD + "  Size: " + ChatColor.GRAY + width + "x" + height + " tiles" 
+                            + (canvas.isLoaded() && canvas.getFrames() != 1 ? ", " + frames + " frames" : ""));
                     sender.sendMessage(ChatColor.GOLD + "  Map IDs: " + ChatColor.GRAY
                             + canvas.getBaseId() + "-" + (canvas.getBaseId() + canvas.getWidth() * canvas.getHeight() - 1));
                     sender.sendMessage(ChatColor.GOLD + "  Refresh Rate: " + ChatColor.GRAY + canvas.getDelay() + " ticks per frame");
