@@ -56,7 +56,7 @@ public class LoadStatistics {
     }
 
     private static class RollingAverage {
-
+        private int averageSize = 0;
         private final long[] ringBuffer;
         private int ringIndex = 0;
 
@@ -67,10 +67,13 @@ public class LoadStatistics {
         public void update(long dataPoint) {
             ringBuffer[ringIndex] = dataPoint;
             ringIndex = (ringIndex + 1) % ringBuffer.length;
+            if(averageSize < ringBuffer.length) {
+                averageSize++;
+            }
         }
 
         public long getAverage() {
-            return getSum() / ringBuffer.length;
+            return getSum() / averageSize;
         }
 
         public long getSum() {
