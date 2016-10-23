@@ -97,6 +97,7 @@ public class CanvasURLLoader extends Thread {
             if (!Settings.ANIMATIONS) {
                 data = Arrays.copyOf(fileData, 16384 * width * height);
                 frames = 1;
+                sendMessage(ChatColor.GOLD + "Note: Animations are disabled, but will work if enabled in the config.yml");
             }
 
             if (CanvasManager.hasCanvasByName(name)) {

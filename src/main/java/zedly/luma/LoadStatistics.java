@@ -43,7 +43,7 @@ public class LoadStatistics {
     }
 
     public static long averageCumulativeFPS() {
-        return CUMULATIVE_FPS.getSum() * 20 / Settings.STATISTICS_AVERAGE_TIME;
+        return CUMULATIVE_FPS.getSum() * 20 / CUMULATIVE_FPS.getRingSize();
     }
 
     public static void tick() {
@@ -56,7 +56,7 @@ public class LoadStatistics {
     }
 
     private static class RollingAverage {
-        private int averageSize = 0;
+        private int ringSize = 0;
         private final long[] ringBuffer;
         private int ringIndex = 0;
 
@@ -67,13 +67,13 @@ public class LoadStatistics {
         public void update(long dataPoint) {
             ringBuffer[ringIndex] = dataPoint;
             ringIndex = (ringIndex + 1) % ringBuffer.length;
-            if(averageSize < ringBuffer.length) {
-                averageSize++;
+            if(ringSize < ringBuffer.length) {
+                ringSize++;
             }
         }
 
         public long getAverage() {
-            return getSum() / averageSize;
+            return getSum() / ringSize;
         }
 
         public long getSum() {
@@ -82,6 +82,10 @@ public class LoadStatistics {
                 sum += ringBuffer[i];
             }
             return sum;
+        }
+        
+        public int getRingSize() {
+            return ringSize;
         }
     }
 }
