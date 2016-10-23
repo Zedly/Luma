@@ -1,5 +1,8 @@
-asd:
-  - fgh:
-    jkl: mno
-  - sdf:
-    ghj: klm
+# Maximum distance for clicks on a map
+max-click-range: 25
+
+# Time in seconds before an unused image is removed from RAM
+image-idle-unload-time: 1800
+
+# Display animations
+animations: true

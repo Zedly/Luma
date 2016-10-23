@@ -9,9 +9,7 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.LinkedList;
-import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
 /**
@@ -67,7 +65,7 @@ public class ThreadAsyncLazyFileLoader extends Thread {
             }
             int width = dis.readByte();
             int height = dis.readByte();
-            int frames = dis.readInt();
+            int frames = (Settings.ANIMATIONS ? dis.readInt() : 1); // If animations disabled, only load first frame
             byte[] uncompressedData = new byte[16384 * width * height * frames];
 
             inflater.reset();

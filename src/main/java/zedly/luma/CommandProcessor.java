@@ -161,53 +161,66 @@ public class CommandProcessor {
                 sender.sendMessage(ChatColor.GOLD + "Maps printed! ");
                 break;
             case "set-action":
-                if (args.length < 3) {
-                    sender.sendMessage(ChatColor.GOLD + "/lu set-action [id] [type] [data]");
-                    sender.sendMessage(ChatColor.GRAY + "Sets a click action for the given map ID.");
-                    sender.sendMessage(ChatColor.GOLD + "Example: " + ChatColor.GRAY + "/lu set-action 100 message &lBOOM You are dead");
+                if (args.length <= 2) {
+                    sender.sendMessage(ChatColor.GOLD + "/lu set-action [type] [data]");
+                    sender.sendMessage(ChatColor.GRAY + "Sets a click action for the map held or looked at");
+                    sender.sendMessage(ChatColor.GOLD + "Example: " + ChatColor.GRAY + "/lu set-action message &lBOOM You are dead");
                     sender.sendMessage("");
                     break;
                 }
-                try {
-                    int mapId = Integer.parseInt(args[1]);
-                    if (CanvasManager.hasMapId(mapId)) {
-                        LumaMap lumaMap = CanvasManager.getMapById(mapId);
-                        ClickAction action = ClickAction.generate(args[2], Arrays.copyOfRange(args, 3, args.length));
-                        if (action != null) {
-                            lumaMap.setAction(action);
-                            CanvasManager.saveDataYml();
-                            sender.sendMessage(ChatColor.GOLD + "Click action updated!");
-                            break;
-                        }
+
+                player = (Player) sender;
+                LumaMap lumaMap = null;
+                ItemStack is = player.getInventory().getItemInMainHand();
+                if (is != null && is.getType() == Material.MAP && CanvasManager.hasMapId(is.getDurability())) {
+                    lumaMap = CanvasManager.getMapById(is.getDurability());
+                } else {
+                    ItemFrame itemFrame = LongRangeAimUtil.getMapInView(player);
+                    if (itemFrame != null) {
+                        lumaMap = CanvasManager.getMapInItemFrame(itemFrame);
+                    }
+                }
+                if (lumaMap == null) {
+                    sender.sendMessage(ChatColor.GOLD + "No map selected! " + ChatColor.GRAY + " Hold the map or look directly at it while setting an action");
+                    break;
+                } else {
+                    ClickAction action = ClickAction.generate(args[1], Arrays.copyOfRange(args, 2, args.length));
+                    if (action == null) {
                         sender.sendMessage(ChatColor.GOLD + "Invalid Action Type! " + ChatColor.GRAY + " See /lu set-action for a list of options.");
-                        sender.sendMessage(ChatColor.GOLD + "Example: " + ChatColor.GRAY + "/lu set-action 100 message &lBOOM You are dead");
+                        sender.sendMessage(ChatColor.GOLD
+                                + "Example: " + ChatColor.GRAY + "/lu set-action message &lBOOM You are dead");
                         sender.sendMessage("");
+                    } else {
+                        lumaMap.setAction(action);
+                        CanvasManager.saveDataYml();
+                        sender.sendMessage(ChatColor.GOLD + "Click action updated!");
                         break;
                     }
-                } catch (NumberFormatException ex) {
                 }
-                sender.sendMessage(ChatColor.GOLD + "Invalid Map ID! " + ChatColor.GRAY + " Must be a map registered in Luma.");
-                sender.sendMessage(ChatColor.GOLD + "Example: " + ChatColor.GRAY + "/lu set-action 100 message &lBOOM You are dead");
-                sender.sendMessage("");
                 break;
             case "set-source":
-                if (args.length != 3) {
+                if (args.length
+                        != 3) {
                     sender.sendMessage(ChatColor.GOLD + "/lu set-source [name] [URL]");
                     sender.sendMessage(ChatColor.GRAY + "Assigns a new resource to the given image. Aspect ratio cannot be changed!");
                     sender.sendMessage(ChatColor.GOLD + "Example: " + ChatColor.GRAY + "/lu set-source creeperface http://i.imgur.com/KtVdxxX.jpg");
                     sender.sendMessage("");
                     break;
                 }
+
                 if (!CanvasManager.hasCanvasByName(args[1])) {
                     sender.sendMessage(ChatColor.GOLD + "Image does not exist! " + ChatColor.GRAY + "Use " + ChatColor.ITALIC + "create" + ChatColor.GRAY + " to create it.");
                     break;
                 }
                 canvas = CanvasManager.getCanvasByName(args[1]);
-                sender.sendMessage(ChatColor.GOLD + "Loading...");
+
+                sender.sendMessage(ChatColor.GOLD
+                        + "Loading...");
                 new CanvasURLLoader(sender, canvas, args[2]).start();
                 break;
             case "set-speed":
-                if (args.length != 3) {
+                if (args.length
+                        != 3) {
                     sender.sendMessage(ChatColor.GOLD + "/lu set-speed [name] [speed]");
                     sender.sendMessage(ChatColor.GRAY + "Sets an animation's refresh rate in ticks per frame.");
                     sender.sendMessage(ChatColor.GRAY + "One second = 20 ticks. Maps redraw every 10 ticks on a wall and every 4 ticks in a player's inventory.");
@@ -216,11 +229,13 @@ public class CommandProcessor {
                     sender.sendMessage("");
                     break;
                 }
+
                 if (!CanvasManager.hasCanvasByName(args[1])) {
                     sender.sendMessage(ChatColor.GOLD + "Image does not exist! " + ChatColor.GRAY + "Use " + ChatColor.ITALIC + "create" + ChatColor.GRAY + " to create it.");
                     break;
                 }
                 canvas = CanvasManager.getCanvasByName(args[1]);
+
                 try {
                     int newDelay = Integer.parseInt(args[2]);
                     if (newDelay > 0) {
@@ -238,9 +253,12 @@ public class CommandProcessor {
 
                 } catch (NumberFormatException ex) {
                 }
-                sender.sendMessage(ChatColor.GOLD + "Invalid refresh rate! " + ChatColor.GRAY + "Must be a natural number of ticks (1/20 second)");
+                sender.sendMessage(ChatColor.GOLD
+                        + "Invalid refresh rate! " + ChatColor.GRAY + "Must be a natural number of ticks (1/20 second)");
+
                 break;
         }
+
         return true;
     }
 }

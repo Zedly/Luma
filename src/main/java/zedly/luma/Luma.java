@@ -40,6 +40,7 @@ public class Luma extends JavaPlugin {
         if(!loadResources()) {
             Bukkit.getPluginManager().disablePlugin(this);
         }
+        Settings.loadConfigYml();
         CanvasManager.loadDataYml();
         int taskid = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, Synchronizer.instance(), 1, 1);
         Synchronizer.setTaskId(taskid);

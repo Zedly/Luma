@@ -120,7 +120,7 @@ public class LumaCanvas {
         if (state == CanvasState.DORMANT) {
             return;
         }
-        if (System.currentTimeMillis() - lastUseTime > 1800000) {
+        if (System.currentTimeMillis() - lastUseTime > Settings.IMAGE_IDLE_UNLOAD_TIME) {
             backBuffer = null;
             frameIndex = 0;
             state = CanvasState.DORMANT;

@@ -17,7 +17,8 @@ import org.w3c.dom.NodeList;
 
 /**
  * Utility class that reads GIF data and processes it nicely into BufferedImages.
- * Big thanks to Alex Orzechowski (http://stackoverflow.com/users/1917206/alex-orzechowski) for posting this code on StackOverflow.
+ * Original code by Alex Orzechowski (http://stackoverflow.com/users/1917206/alex-orzechowski)
+ * Posted on StackOverflow: http://stackoverflow.com/questions/8933893/convert-each-animated-gif-frame-to-a-separate-bufferedimage
  * 
  * @author Alex Orzechowski
  */

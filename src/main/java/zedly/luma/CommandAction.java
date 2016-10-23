@@ -19,7 +19,6 @@ public class CommandAction extends ClickAction {
 
     public CommandAction(String[] message) {
         StringBuilder sb = new StringBuilder();
-        //sb.append("/");
         for (int i = 0; i < message.length; i++) {
             sb.append(message[i].replace("&", ChatColor.COLOR_CHAR + "")).append(" ");
         }
@@ -33,7 +32,7 @@ public class CommandAction extends ClickAction {
 
     @Override
     public String getData() {
-        return command;
+        return "/" + command;
     }
 
     public void run(Player player, ItemFrame itemFrame) {

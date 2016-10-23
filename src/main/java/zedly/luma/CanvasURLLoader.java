@@ -5,7 +5,6 @@
  */
 package zedly.luma;
 
-import java.awt.Color;
 import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -15,25 +14,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.metadata.IIOMetadata;
-import javax.imageio.metadata.IIOMetadataNode;
-import javax.imageio.stream.ImageInputStream;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.map.MapPalette;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import zedly.luma.HTTP.HTTPResponse;
 
 /**
@@ -99,6 +91,12 @@ public class CanvasURLLoader extends Thread {
                 }
             }
 
+            byte[] fileData = data;
+            // If animations are disabled, only keep the first frame in memory, but save the full animation
+            if (!Settings.ANIMATIONS) {
+                data = Arrays.copyOf(fileData, 16384 * width * height);
+            }
+
             if (CanvasManager.hasCanvasByName(name)) {
                 CanvasManager.getCanvasByName(name).setData(width, height, frames, data);
                 sendMessage(ChatColor.GOLD + "Successfully changed image!");
@@ -107,7 +105,7 @@ public class CanvasURLLoader extends Thread {
                 sendMessage(ChatColor.GOLD + "Successfully loaded image! " + ChatColor.GRAY + "Use "
                         + ChatColor.ITALIC + "/lu print " + name + ChatColor.GRAY + " to get the created maps");
             }
-            writeBlob(name, width, height, frames, data);
+            writeBlob(name, width, height, frames, fileData);
         } catch (Exception ex) {
             sendMessage(ChatColor.GOLD + "Unable to load image! " + ChatColor.GRAY + ex.getMessage());
         }
@@ -207,7 +205,7 @@ public class CanvasURLLoader extends Thread {
             default:
                 sendMessage(ChatColor.GOLD + "Unknown file format! " + ChatColor.GRAY + "Make sure you are pasting a deep link. These usually contain a picture file ending");
                 return images;
-                
+
         }
         return images;
     }
