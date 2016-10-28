@@ -76,7 +76,7 @@ public class CanvasManager {
         return baseId;
     }
 
-    public LinkedList<String> getCanvasIds() {
+    public static LinkedList<String> getCanvasIds() {
         LinkedList<String> nameList = new LinkedList<>();
         for (String name : CANVASES_BY_NAME.keySet()) {
             nameList.add(name);

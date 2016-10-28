@@ -6,6 +6,8 @@
 package zedly.luma;
 
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -131,7 +133,41 @@ public class CommandProcessor {
                 }
                 break;
             case "list":
+                int page = 0;
+                if (args.length >= 2) {
+                    try {
+                        page = Integer.parseInt(args[1]) - 1;
+                    } catch (NumberFormatException ex) {
+                    }
+                }
+                List<String> imageNames = CanvasManager.getCanvasIds();
+                if (page < 0 || page * 20 >= imageNames.size()) {
+                    page = 0;
+                }
                 
+                Iterator<String> nameIterator = imageNames.iterator();
+                
+                for (int i = 0; i < 20 * page; i++) {
+                    nameIterator.next();
+                }
+                
+                StringBuilder sb = new StringBuilder();
+                boolean comma = false;
+                for (int i = 0; i < 20 && nameIterator.hasNext(); i++) {
+                    if (comma) {
+                        sb.append(", ");
+                    }
+                    String name = nameIterator.next();
+                    canvas = CanvasManager.getCanvasByName(name);
+                    sb.append(ChatColor.GOLD).append(name)
+                            .append(ChatColor.GRAY).append(" (")
+                            .append(canvas.getWidth()).append("x").append(canvas.getHeight()).append(")");
+                    comma = true;
+                }
+                sender.sendMessage(Luma.logo + "Page " + ChatColor.GOLD + (page + 1) 
+                        + ChatColor.GRAY + " of " + ChatColor.GOLD + (imageNames.size() / 20 + 1) 
+                        + ChatColor.GRAY + ":");
+                sender.sendMessage(sb.toString());
                 break;
             case "print":
                 if (!(sender instanceof Player)) {
