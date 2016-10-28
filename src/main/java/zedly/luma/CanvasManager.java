@@ -9,8 +9,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -55,7 +57,7 @@ public class CanvasManager {
         int baseId = views.get(0).getId();
         ArrayList<LumaMap> newMaps = new ArrayList<>();
         LumaCanvas canvas = new LumaCanvas(name, baseId, width, height, 20, newMaps);
-        canvas.setData(width, height, frames, data);
+        canvas.setData(frames, data);
         canvas.setDelay(20);
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
@@ -72,6 +74,14 @@ public class CanvasManager {
         CANVASES_BY_NAME.put(name, canvas);
         saveDataYml();
         return baseId;
+    }
+
+    public LinkedList<String> getCanvasIds() {
+        LinkedList<String> nameList = new LinkedList<>();
+        for (String name : CANVASES_BY_NAME.keySet()) {
+            nameList.add(name);
+        }
+        return nameList;
     }
 
     /**
@@ -157,7 +167,7 @@ public class CanvasManager {
     public static int getNumberOfCanvases() {
         return CANVASES.size();
     }
-    
+
     /**
      * Returns the number of loaded tiles (with data in RAM)
      *
@@ -175,6 +185,7 @@ public class CanvasManager {
 
     /**
      * Returns the total number of tiles (registered map IDs)
+     *
      * @return the total number of tiles (registered map IDs)
      */
     public static int getNumberOfTiles() {
@@ -184,10 +195,11 @@ public class CanvasManager {
         }
         return tiles;
     }
-    
+
     /**
      * Returns an estimate of the net memory load caused by loaded canvases.
      * Ignores JVM overhead.
+     *
      * @return the number of content bytes
      */
     public static int getNetMemoryLoad() {

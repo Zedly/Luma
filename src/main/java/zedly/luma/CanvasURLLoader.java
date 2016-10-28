@@ -101,7 +101,7 @@ public class CanvasURLLoader extends Thread {
             }
 
             if (CanvasManager.hasCanvasByName(name)) {
-                CanvasManager.getCanvasByName(name).setData(width, height, frames, data);
+                CanvasManager.getCanvasByName(name).setData(frames, data);
                 sendMessage(ChatColor.GOLD + "Successfully changed image!");
             } else {
                 CanvasManager.createCanvasForData(name, data, width, height, frames);

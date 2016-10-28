@@ -58,7 +58,8 @@ public class LumaCanvas {
         if (state == CanvasState.DORMANT) {
             Luma.lazyFileLoader.addCanvasToLoad(this);
             state = CanvasState.LOADING;
-        } else if (state == CanvasState.LOADING) {
+        }
+        if (state == CanvasState.LOADING) {
             Luma.loadingIcon.drawTile(0, 0, output);
         } else if (backBuffer == null
                 || x < 0 || y < 0 || x >= width || y >= height) {
@@ -74,23 +75,19 @@ public class LumaCanvas {
     /**
      * Changes this canvas's image data and puts it into the "loaded" state.
      *
-     * @param width the new width of this image
-     * @param height the new height of this image
      * @param frames the new number of frames of this image
      * @param data the new image data to apply to this image
      */
-    public void setData(int width, int height, int frames, byte[] data) {
+    public void setData(int frames, byte[] data) {
         this.backBuffer = data;
-        this.width = width;
-        this.height = height;
         this.frames = frames;
-        this.frameIndex = 0;
+        this.frameIndex %= frames;
         for (LumaMap map : maps) {
             map.forceRedraw();
         }
         state = CanvasState.LOADED;
     }
-    
+
     /**
      * Sets this canvas' data to null, indicating a broken file.
      */
@@ -122,7 +119,6 @@ public class LumaCanvas {
         }
         if (System.currentTimeMillis() - lastUseTime > Settings.IMAGE_IDLE_UNLOAD_TIME) {
             backBuffer = null;
-            frameIndex = 0;
             state = CanvasState.DORMANT;
         }
         if (frames != 0) {
@@ -196,8 +192,9 @@ public class LumaCanvas {
     }
 
     /**
-     * Returns whether or not this canvas is loaded.
-     * If it has not been viewed for a while, it returns to the dormant state to save memory.
+     * Returns whether or not this canvas is loaded. If it has not been viewed
+     * for a while, it returns to the dormant state to save memory.
+     *
      * @return true if the data belonging to this image is in memory.
      */
     public boolean isLoaded() {

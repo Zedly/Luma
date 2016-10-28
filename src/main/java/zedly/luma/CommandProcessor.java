@@ -130,6 +130,9 @@ public class CommandProcessor {
                     }
                 }
                 break;
+            case "list":
+                
+                break;
             case "print":
                 if (!(sender instanceof Player)) {
                     sender.sendMessage(ChatColor.GOLD + "Only works ingame!");

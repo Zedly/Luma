@@ -65,6 +65,13 @@ public class ThreadAsyncLazyFileLoader extends Thread {
             }
             int width = dis.readByte();
             int height = dis.readByte();
+            if (width != canvas.getWidth() || height != canvas.getHeight()) {
+                Synchronizer.add(() -> {
+                    canvas.setNullData();
+                });
+                return;
+            }
+
             int frames = (Settings.ANIMATIONS ? dis.readInt() : 1); // If animations disabled, only load first frame
             byte[] uncompressedData = new byte[16384 * width * height * frames];
 
@@ -73,7 +80,7 @@ public class ThreadAsyncLazyFileLoader extends Thread {
             inflater.inflate(uncompressedData);
 
             Synchronizer.add(() -> {
-                canvas.setData(width, height, frames, uncompressedData);
+                canvas.setData(frames, uncompressedData);
             });
         } catch (Exception ex) {
             ex.printStackTrace();

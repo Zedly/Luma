@@ -84,13 +84,13 @@ public class Luma extends JavaPlugin {
             dis.readFully(temp);
             dis.close();
             brokenFileIcon = new LumaCanvas("Error", 1, 1, 1, 20, new ArrayList<>());
-            brokenFileIcon.setData(1, 1, 1, temp);
+            brokenFileIcon.setData(1, temp);
 
             temp = new byte[65536];
             dis = new DataInputStream(Luma.class.getResourceAsStream("/loading"));
             dis.readFully(temp);
             loadingIcon = new LumaCanvas("Loading", 1, 1, 4, 10, new ArrayList<>());
-            loadingIcon.setData(1, 1, 4, temp);
+            loadingIcon.setData(4, temp);
         } catch (Exception ex) {
             return false;
         }
