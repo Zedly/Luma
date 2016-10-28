@@ -5,7 +5,6 @@
  */
 package zedly.luma;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 
@@ -20,7 +19,7 @@ public class CommandAction extends ClickAction {
     public CommandAction(String[] message) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < message.length; i++) {
-            sb.append(message[i].replace("&", ChatColor.COLOR_CHAR + "")).append(" ");
+            sb.append(message[i]).append(" ");
         }
         this.command = sb.toString();
     }
