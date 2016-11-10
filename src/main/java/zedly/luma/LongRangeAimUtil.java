@@ -34,6 +34,9 @@ public class LongRangeAimUtil {
      */
     public static ItemFrame getMapInView(Player player) {
         List<Block> lastTwoBlocks = player.getLastTwoTargetBlocks((HashSet<Material>) null, Settings.MAX_CLICK_RANGE);
+        if (lastTwoBlocks.size() < 2) {
+            return null;
+        }
         Block baseBlock = lastTwoBlocks.get(1);
         Block searchBlock = lastTwoBlocks.get(0);
         BlockFace bf = searchBlock.getFace(baseBlock);
