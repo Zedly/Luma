@@ -5,25 +5,30 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
 
 /**
  * A utility class for retrieving HTTP resources.
+ *
  * @author Dennis
  */
 public class HTTP {
 
     /**
      * Perform a HTTP GET request for the given URL.
+     *
      * @param url the URL of the resource to retrieve
      * @return a structure containing response headers and payload
      * @throws IOException if a network error occurs
      */
     public static HTTPResponse get(URL url) throws IOException {
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        URLConnection con = (URLConnection) url.openConnection();
         con.setConnectTimeout(30000);
-        con.setRequestMethod("GET");
+        if (con instanceof HttpURLConnection) {
+            ((HttpURLConnection) con).setRequestMethod("GET");
+        }
         con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31");
         con.setDoInput(true);
         Map<String, List<String>> headers = con.getHeaderFields();
