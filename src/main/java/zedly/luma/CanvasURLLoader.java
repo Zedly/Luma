@@ -23,6 +23,7 @@ import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import javax.imageio.ImageIO;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.map.MapPalette;
@@ -100,15 +101,24 @@ public class CanvasURLLoader extends Thread {
                 sendMessage(ChatColor.GOLD + "Note: Animations are disabled, but will work if enabled in the config.yml");
             }
 
-            if (CanvasManager.hasCanvasByName(name)) {
-                CanvasManager.getCanvasByName(name).setData(frames, data);
-                sendMessage(ChatColor.GOLD + "Successfully changed image!");
-            } else {
-                CanvasManager.createCanvasForData(name, data, width, height, frames);
-                sendMessage(ChatColor.GOLD + "Successfully loaded image! " + ChatColor.GRAY + "Use "
-                        + ChatColor.ITALIC + "/lu print " + name + ChatColor.GRAY + " to get the created maps");
-            }
-            writeBlob(name, width, height, fileFrames, fileData);
+            byte[] data_f = data;
+            int frames_f = frames;
+
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Luma.instance, () -> {
+                try {
+                    if (CanvasManager.hasCanvasByName(name)) {
+                        CanvasManager.getCanvasByName(name).setData(frames_f, data_f);
+                        sendMessage(ChatColor.GOLD + "Successfully changed image!");
+                    } else {
+                        CanvasManager.createCanvasForData(name, data_f, width, height, frames_f);
+                        sendMessage(ChatColor.GOLD + "Successfully loaded image! " + ChatColor.GRAY + "Use "
+                                + ChatColor.ITALIC + "/lu print " + name + ChatColor.GRAY + " to get the created maps");
+                    }
+                    writeBlob(name, width, height, fileFrames, fileData);
+                } catch (Exception ex) {
+                    sendMessage(ChatColor.GOLD + "Unable to load image! " + ChatColor.GRAY + ex.getMessage());
+                }
+            }, 0);
         } catch (Exception ex) {
             sendMessage(ChatColor.GOLD + "Unable to load image! " + ChatColor.GRAY + ex.getMessage());
         }

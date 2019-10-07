@@ -8,6 +8,7 @@ package zedly.luma;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -15,6 +16,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.MapMeta;
+import org.bukkit.map.MapView;
 
 /**
  * Chat-based user interaction
@@ -144,13 +148,13 @@ public class CommandProcessor {
                 if (page < 0 || page * 20 >= imageNames.size()) {
                     page = 0;
                 }
-                
+
                 Iterator<String> nameIterator = imageNames.iterator();
-                
+
                 for (int i = 0; i < 20 * page; i++) {
                     nameIterator.next();
                 }
-                
+
                 StringBuilder sb = new StringBuilder();
                 boolean comma = false;
                 for (int i = 0; i < 20 && nameIterator.hasNext(); i++) {
@@ -164,8 +168,8 @@ public class CommandProcessor {
                             .append(canvas.getWidth()).append("x").append(canvas.getHeight()).append(")");
                     comma = true;
                 }
-                sender.sendMessage(Luma.logo + "Page " + ChatColor.GOLD + (page + 1) 
-                        + ChatColor.GRAY + " of " + ChatColor.GOLD + (imageNames.size() / 20 + 1) 
+                sender.sendMessage(Luma.logo + "Page " + ChatColor.GOLD + (page + 1)
+                        + ChatColor.GRAY + " of " + ChatColor.GOLD + (imageNames.size() / 20 + 1)
                         + ChatColor.GRAY + ":");
                 sender.sendMessage(sb.toString());
                 break;
@@ -199,7 +203,13 @@ public class CommandProcessor {
                     break;
                 }
                 for (int i = canvas.getBaseId(); i < canvas.getBaseId() + requiredSlots; i++) {
-                    player.getInventory().addItem(new ItemStack(Material.MAP, 1, (short) i));
+                    MapView mapView = Bukkit.getMap((short) i);
+                    ItemStack mapItem = new ItemStack(Material.FILLED_MAP, 1);
+                    ItemMeta meta = mapItem.getItemMeta();
+                    MapMeta mapMeta = (MapMeta) meta;
+                    mapMeta.setMapView(mapView);
+                    mapItem.setItemMeta(meta);
+                    player.getInventory().addItem(mapItem);
                 }
                 sender.sendMessage(ChatColor.GOLD + "Maps printed! ");
                 break;
@@ -242,6 +252,7 @@ public class CommandProcessor {
                 }
                 break;
             case "set-source":
+            case "update":
                 if (args.length
                         != 3) {
                     sender.sendMessage(ChatColor.GOLD + "/lu set-source [name] [URL]");
