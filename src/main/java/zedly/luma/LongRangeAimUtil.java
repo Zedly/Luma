@@ -47,7 +47,7 @@ public class LongRangeAimUtil {
                 ItemFrame itemFrame = (ItemFrame) ent;
                 if (itemFrame.getAttachedFace() == bf) {
                     ItemStack is = itemFrame.getItem();
-                    if (is.getType() == Material.MAP && CanvasManager.hasMapId(is.getDurability())) {
+                    if (is.getType() == Material.FILLED_MAP && CanvasManager.hasMap(is)) {
                         return itemFrame;
                     }
                 }

@@ -8,10 +8,42 @@ commands:
   lu:
     description: Open your Tricorder, switch to a menu.
     aliases: [luma]
-    usage: /lu [create/changeto/speed/action]
+    usage: /lu [create/update/set-speed/action]
     permission: luma.luma
 
 permissions:
-  luma.luma:
+  luma.*:
     description: Gives access to all subordinate nodes for convenience.
+    default: false
+    children:
+      luma.create: true
+      luma.update: true
+      luma.print: true
+      luma.action: true
+      luma.setspeed: true
+      luma.stats: true
     
+    
+  luma.create:
+    description: Create new Luma images
+    default: false
+    
+  luma.update:
+    description: Change the content of an image
+    default: false
+  
+  luma.print:
+    description: Spawn map items containing an image
+    default: false
+  
+  luma.setspeed:
+    description: Change the speed of an animation
+    default: false
+  
+  luma.action:
+    description: Change the special function of a Luma map
+    default: false
+    
+  luma.stats:
+    description: See Luma's CPU and RAM usage
+    default: false

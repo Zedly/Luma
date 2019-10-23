@@ -34,7 +34,7 @@ public class CommandProcessor {
             sender.sendMessage(ChatColor.GOLD + "/lu info ([name])");
             sender.sendMessage(ChatColor.GOLD + "/lu print [name]");
             sender.sendMessage(ChatColor.GOLD + "/lu set-action [id] [type] {data}");
-            sender.sendMessage(ChatColor.GOLD + "/lu set-source [name] [URL]");
+            sender.sendMessage(ChatColor.GOLD + "/lu update [name] [URL]");
             sender.sendMessage(ChatColor.GOLD + "/lu set-speed [name] [speed]");
             sender.sendMessage(ChatColor.GOLD + "/lu stats");
             sender.sendMessage("");
@@ -42,6 +42,10 @@ public class CommandProcessor {
         }
         switch (args[0]) {
             case "create":
+                if(!sender.hasPermission("luma.create")) {
+                    sender.sendMessage(ChatColor.GOLD + "Luma: " + ChatColor.GRAY + "You don't have permission to do this!");
+                    return false;
+                }
                 if (args.length != 4) {
                     sender.sendMessage(ChatColor.GOLD + "/lu create [name] [dims] [URL]");
                     sender.sendMessage(ChatColor.GRAY + "Generates a new image with the given dimensions from the given web resource.");
@@ -54,7 +58,7 @@ public class CommandProcessor {
                     break;
                 }
                 if (CanvasManager.hasCanvasByName(args[1])) {
-                    sender.sendMessage(ChatColor.GOLD + "Image already exists! " + ChatColor.GRAY + "Use set-source to change");
+                    sender.sendMessage(ChatColor.GOLD + "Image already exists! " + ChatColor.GRAY + "Use update to change");
                     break;
                 }
                 String[] dims = args[2].split("x");
@@ -77,6 +81,10 @@ public class CommandProcessor {
                 sender.sendMessage("");
                 break;
             case "info":
+                if(!sender.hasPermission("luma.info")) {
+                    sender.sendMessage(ChatColor.GOLD + "Luma: " + ChatColor.GRAY + "You don't have permission to do this!");
+                    return false;
+                }
                 LumaCanvas canvas = null;
                 if (args.length == 2) {
                     if (!CanvasManager.hasCanvasByName(args[1])) {
@@ -87,14 +95,14 @@ public class CommandProcessor {
                 } else if (sender instanceof Player) {
                     Player player = (Player) sender;
                     ItemStack is = player.getInventory().getItemInMainHand();
-                    if (is != null && is.getType() == Material.MAP && CanvasManager.hasMapId(is.getDurability())) {
-                        canvas = CanvasManager.getCanvasByMapId(is.getDurability());
+                    if (is != null && is.getType() == Material.FILLED_MAP && CanvasManager.hasMap(is)) {
+                        canvas = CanvasManager.getCanvasByMap(is);
                     } else {
                         ItemFrame itemFrame = LongRangeAimUtil.getMapInView(player);
                         if (itemFrame != null) {
                             is = itemFrame.getItem();
-                            if (is != null && is.getType() == Material.MAP && CanvasManager.hasMapId(is.getDurability())) {
-                                canvas = CanvasManager.getCanvasByMapId(is.getDurability());
+                            if (is.getType() == Material.FILLED_MAP && CanvasManager.hasMap(is)) {
+                                canvas = CanvasManager.getCanvasByMap(is);
                             }
                         }
                     }
@@ -137,6 +145,10 @@ public class CommandProcessor {
                 }
                 break;
             case "list":
+                if(!sender.hasPermission("luma.list")) {
+                    sender.sendMessage(ChatColor.GOLD + "Luma: " + ChatColor.GRAY + "You don't have permission to do this!");
+                    return false;
+                }
                 int page = 0;
                 if (args.length >= 2) {
                     try {
@@ -174,6 +186,10 @@ public class CommandProcessor {
                 sender.sendMessage(sb.toString());
                 break;
             case "print":
+                if(!sender.hasPermission("luma.print")) {
+                    sender.sendMessage(ChatColor.GOLD + "Luma: " + ChatColor.GRAY + "You don't have permission to do this!");
+                    return false;
+                }
                 if (!(sender instanceof Player)) {
                     sender.sendMessage(ChatColor.GOLD + "Only works ingame!");
                     break;
@@ -213,11 +229,16 @@ public class CommandProcessor {
                 }
                 sender.sendMessage(ChatColor.GOLD + "Maps printed! ");
                 break;
+            case "action":
             case "set-action":
+                if(!sender.hasPermission("luma.action")) {
+                    sender.sendMessage(ChatColor.GOLD + "Luma: " + ChatColor.GRAY + "You don't have permission to do this!");
+                    return false;
+                }
                 if (args.length <= 2) {
                     sender.sendMessage(ChatColor.GOLD + "/lu set-action [type] [data]");
                     sender.sendMessage(ChatColor.GRAY + "Sets a click action for the map held or looked at");
-                    sender.sendMessage(ChatColor.GOLD + "Example: " + ChatColor.GRAY + "/lu set-action message &lBOOM You are dead");
+                    sender.sendMessage(ChatColor.GOLD + "Options: " + ChatColor.GRAY + "message {message}, command {command}, warp {warpname}, heal");
                     sender.sendMessage("");
                     break;
                 }
@@ -225,8 +246,8 @@ public class CommandProcessor {
                 player = (Player) sender;
                 LumaMap lumaMap = null;
                 ItemStack is = player.getInventory().getItemInMainHand();
-                if (is != null && is.getType() == Material.MAP && CanvasManager.hasMapId(is.getDurability())) {
-                    lumaMap = CanvasManager.getMapById(is.getDurability());
+                if (is != null && is.getType() == Material.FILLED_MAP && CanvasManager.hasMap(is)) {
+                    lumaMap = CanvasManager.getMapByItem(is);
                 } else {
                     ItemFrame itemFrame = LongRangeAimUtil.getMapInView(player);
                     if (itemFrame != null) {
@@ -251,13 +272,16 @@ public class CommandProcessor {
                     }
                 }
                 break;
-            case "set-source":
             case "update":
-                if (args.length
-                        != 3) {
-                    sender.sendMessage(ChatColor.GOLD + "/lu set-source [name] [URL]");
+            case "set-source":
+                if(!sender.hasPermission("luma.update")) {
+                    sender.sendMessage(ChatColor.GOLD + "Luma: " + ChatColor.GRAY + "You don't have permission to do this!");
+                    return false;
+                }
+                if (args.length != 3) {
+                    sender.sendMessage(ChatColor.GOLD + "/lu update [name] [URL]");
                     sender.sendMessage(ChatColor.GRAY + "Assigns a new resource to the given image. Aspect ratio cannot be changed!");
-                    sender.sendMessage(ChatColor.GOLD + "Example: " + ChatColor.GRAY + "/lu set-source creeperface http://i.imgur.com/KtVdxxX.jpg");
+                    sender.sendMessage(ChatColor.GOLD + "Example: " + ChatColor.GRAY + "/lu update creeperface http://i.imgur.com/KtVdxxX.jpg");
                     sender.sendMessage("");
                     break;
                 }
@@ -273,12 +297,18 @@ public class CommandProcessor {
                 new CanvasURLLoader(sender, canvas, args[2]).start();
                 break;
             case "set-speed":
-                if (args.length
-                        != 3) {
+            case "speed":
+            case "set-delay":
+            case "delay":
+                if(!sender.hasPermission("luma.setspeed")) {
+                    sender.sendMessage(ChatColor.GOLD + "Luma: " + ChatColor.GRAY + "You don't have permission to do this!");
+                    return false;
+                }
+                if (args.length != 3) {
                     sender.sendMessage(ChatColor.GOLD + "/lu set-speed [name] [speed]");
                     sender.sendMessage(ChatColor.GRAY + "Sets an animation's refresh rate in ticks per frame.");
                     sender.sendMessage(ChatColor.GRAY + "One second = 20 ticks. Maps redraw every 10 ticks on a wall and every 4 ticks in a player's inventory.");
-                    sender.sendMessage(ChatColor.GRAY + "Changing the refresh rate on a static image has no apparent effect, but will be applied when set-source is used to load an animation.");
+                    sender.sendMessage(ChatColor.GRAY + "Changing the refresh rate on a static image has no apparent effect, but will be applied when update is used to load an animation.");
                     sender.sendMessage(ChatColor.GOLD + "Example: " + ChatColor.GRAY + "/lu set-speed creeperface 20");
                     sender.sendMessage("");
                     break;
@@ -295,7 +325,7 @@ public class CommandProcessor {
                     if (newDelay > 0) {
                         canvas.setDelay(Integer.parseInt(args[2]));
                         if (canvas.getFrames() <= 1) {
-                            sender.sendMessage(ChatColor.GRAY + "Changing the refresh rate on a static image has no apparent effect, but will be applied when set-source is used to load an animation.");
+                            sender.sendMessage(ChatColor.GRAY + "Changing the refresh rate on a static image has no apparent effect, but will be applied when update is used to load an animation.");
                         }
                         if (newDelay < 10) {
                             sender.sendMessage(ChatColor.GOLD + "Fast refresh rate! " + ChatColor.GRAY + "This image will skip frames when on a wall.");
@@ -312,6 +342,10 @@ public class CommandProcessor {
 
                 break;
             case "stats":
+                if(!sender.hasPermission("luma.stats")) {
+                    sender.sendMessage(ChatColor.GOLD + "Luma: " + ChatColor.GRAY + "You don't have permission to do this!");
+                    return false;
+                }
                 sender.sendMessage(Luma.logo + " Load statistics:");
                 sender.sendMessage(ChatColor.GOLD + "  Images: " + ChatColor.GRAY + CanvasManager.getNumberOfCanvases()
                         + " (" + CanvasManager.getNumberOfLoadedCanvases() + " loaded)");

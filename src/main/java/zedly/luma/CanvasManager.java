@@ -19,6 +19,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
 
@@ -140,8 +141,19 @@ public class CanvasManager {
      * @param mapId the map ID to search
      * @return the canvas, or null
      */
-    public static LumaCanvas getCanvasByMapId(int mapId) {
+    private static LumaCanvas getCanvasByMapId(int mapId) {
         return CANVASES_BY_MAP_ID.get(mapId);
+    }
+
+    /**
+     * Returns the canvas belonging to the given map ID
+     *
+     * @param mapId the map ID to search
+     * @return the canvas, or null
+     */
+    public static LumaCanvas getCanvasByMap(ItemStack is) {
+        int mapId = getMapId(is);
+        return getCanvasByMapId(mapId);
     }
 
     /**
@@ -218,8 +230,19 @@ public class CanvasManager {
      * @param mapId the map ID to search
      * @return the result
      */
-    public static boolean hasMapId(int mapId) {
+    private static boolean hasMapId(int mapId) {
         return MAPS_BY_MAP_ID.containsKey(mapId);
+    }
+
+    /**
+     * Checks whether this map ID belongs to an existing image
+     *
+     * @param is the map item to search
+     * @return the result
+     */
+    public static boolean hasMap(ItemStack is) {
+        int mapId = getMapId(is);
+        return hasMapId(mapId);
     }
 
     /**
@@ -228,8 +251,31 @@ public class CanvasManager {
      * @param mapId the map ID to query
      * @return the corresponding LumaMap
      */
-    public static LumaMap getMapById(int mapId) {
+    private static LumaMap getMapById(int mapId) {
         return MAPS_BY_MAP_ID.get(mapId);
+    }
+
+    /**
+     * Returns the LumaMap corresponding to this map ID, or null
+     *
+     * @param is the map item to query
+     * @return the corresponding LumaMap
+     */
+    public static LumaMap getMapByItem(ItemStack is) {
+        int mapId = getMapId(is);
+        return getMapById(mapId);
+    }
+
+    private static int getMapId(ItemStack is) {
+        if (is == null || is.getType() != Material.FILLED_MAP) {
+            return -1;
+        }
+        MapMeta map = (MapMeta) is.getItemMeta();
+        if (map == null) {
+            return -1;
+        }
+        int mapId = map.getMapId();
+        return mapId;
     }
 
     /**
@@ -242,8 +288,8 @@ public class CanvasManager {
     public static LumaMap getMapInItemFrame(ItemFrame itemFrame) {
         ItemStack is = itemFrame.getItem();
         if (is != null) {
-            if (is.getType() == Material.MAP && hasMapId(is.getDurability())) {
-                return getMapById(is.getDurability());
+            if (is.getType() == Material.FILLED_MAP && hasMap(is)) {
+                return getMapByItem(is);
             }
         }
         return null;
