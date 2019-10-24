@@ -6,7 +6,7 @@ author: Zedly
 
 commands:
   lu:
-    description: Open your Tricorder, switch to a menu.
+    description: Use the Luma plugin
     aliases: [luma]
     usage: /lu [create/update/set-speed/action]
     permission: luma.luma
