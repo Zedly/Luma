@@ -16,6 +16,7 @@ permissions:
     description: Gives access to all subordinate nodes for convenience.
     default: false
     children:
+      luma.luma: true
       luma.create: true
       luma.update: true
       luma.print: true
@@ -23,6 +24,9 @@ permissions:
       luma.setspeed: true
       luma.stats: true
     
+  luma.luma:
+    description: Access /lu
+    default: false
     
   luma.create:
     description: Create new Luma images
