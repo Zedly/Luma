@@ -16,6 +16,7 @@ permissions:
     description: Gives access to all subordinate nodes for convenience.
     default: false
     children:
+      luma.list: true
       luma.luma: true
       luma.create: true
       luma.update: true
@@ -23,6 +24,10 @@ permissions:
       luma.action: true
       luma.setspeed: true
       luma.stats: true
+    
+  luma.list:
+    description: Access /lu
+    default: false
     
   luma.luma:
     description: Access /lu
