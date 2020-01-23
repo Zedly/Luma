@@ -1,0 +1,3 @@
+lib/
+#Must contain a build of EssentialsX. Also fix the pom
+/target/
