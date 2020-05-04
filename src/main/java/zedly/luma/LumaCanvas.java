@@ -5,7 +5,9 @@
  */
 package zedly.luma;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import net.minecraft.server.v1_15_R1.WorldMap;
 import org.bukkit.map.MapCanvas;
 import org.bukkit.map.MapCursorCollection;
 
@@ -123,6 +125,11 @@ public class LumaCanvas {
         }
         if (frames != 0) {
             frameIndex = (frameIndex + 1) % frames;
+            if (delay < 5) {
+                for (LumaMap map : maps) {
+                    map.forceDirty();
+                }
+            }
         }
     }
 

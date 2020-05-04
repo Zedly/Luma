@@ -63,7 +63,7 @@ public class CanvasManager {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 MapView mapView = views.get(width * y + x);
-                LumaMap lumaMap = new LumaMap(canvas, x, y, mapView.getId());
+                LumaMap lumaMap = new LumaMap(canvas, x, y, mapView);
                 newMaps.add(lumaMap);
                 CANVASES_BY_MAP_ID.put((int) mapView.getId(), canvas);
                 MAPS_BY_MAP_ID.put((int) mapView.getId(), lumaMap);
@@ -103,7 +103,7 @@ public class CanvasManager {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 MapView mapView = Bukkit.getMap((short) (baseId + y * width + x));
-                LumaMap lumaMap = new LumaMap(canvas, x, y, mapView.getId());
+                LumaMap lumaMap = new LumaMap(canvas, x, y, mapView);
                 newMaps.add(lumaMap);
                 CANVASES_BY_MAP_ID.put((int) mapView.getId(), canvas);
                 MAPS_BY_MAP_ID.put((int) mapView.getId(), lumaMap);

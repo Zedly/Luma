@@ -328,7 +328,7 @@ public class CommandProcessor {
                             sender.sendMessage(ChatColor.GRAY + "Changing the refresh rate on a static image has no apparent effect, but will be applied when update is used to load an animation.");
                         }
                         if (newDelay < 10) {
-                            sender.sendMessage(ChatColor.GOLD + "Fast refresh rate! " + ChatColor.GRAY + "This image will skip frames when on a wall.");
+                            sender.sendMessage(ChatColor.GOLD + "Fast refresh rate! " + ChatColor.GRAY + "This image may skip frames when on a wall.");
                         }
                         CanvasManager.saveDataYml();
                         sender.sendMessage(ChatColor.GOLD + "Changed refresh rate to " + newDelay + " ticks per frame.");
