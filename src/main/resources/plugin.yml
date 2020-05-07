@@ -1,6 +1,6 @@
 name: Luma
 main: zedly.luma.Luma
-version: 1.1.1
+version: 1.2.0
 api-version: 1.14
 author: Zedly
 
@@ -8,7 +8,7 @@ commands:
   lu:
     description: "Use the Luma plugin"
     aliases: [luma]
-    usage: "/lu [create/update/set-speed/action]"
+    usage: "/lu [create/update/set-speed/action/info]"
     permission: luma.luma
 
 permissions:
@@ -18,14 +18,19 @@ permissions:
       luma.list: true
       luma.luma: true
       luma.create: true
+      luma.info: true
       luma.update: true
       luma.print: true
       luma.action: true
       luma.setspeed: true
       luma.stats: true
+
+  luma.info:
+    description: Display information about a Luma picture
+    default: false
     
   luma.list:
-    description: Access /lu
+    description: List existing Luma images
     default: false
     
   luma.luma:
