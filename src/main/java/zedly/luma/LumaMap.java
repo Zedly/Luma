@@ -2,13 +2,13 @@ package zedly.luma;
 
 import java.lang.reflect.Field;
 import java.util.Map.Entry;
-import net.minecraft.server.v1_15_R1.EntityHuman;
-import net.minecraft.server.v1_15_R1.EntityPlayer;
-import net.minecraft.server.v1_15_R1.Packet;
-import net.minecraft.server.v1_15_R1.WorldMap;
+import net.minecraft.server.v1_16_R1.EntityHuman;
+import net.minecraft.server.v1_16_R1.EntityPlayer;
+import net.minecraft.server.v1_16_R1.Packet;
+import net.minecraft.server.v1_16_R1.WorldMap;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_15_R1.map.CraftMapView;
+import org.bukkit.craftbukkit.v1_16_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_16_R1.map.CraftMapView;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -33,7 +33,7 @@ public class LumaMap extends MapRenderer {
 
     // NMS Code for high FPS gifs
     private final MapView view;
-    private final net.minecraft.server.v1_15_R1.ItemStack mapItem;
+    private final net.minecraft.server.v1_16_R1.ItemStack mapItem;
     private static Field worldMapField;
     private static boolean nmsEnabled = false;
 
@@ -49,7 +49,6 @@ public class LumaMap extends MapRenderer {
         MapMeta mapMeta = (MapMeta) meta;
         mapMeta.setMapView(view);
         map.setItemMeta(meta);
-
         mapItem = CraftItemStack.asNMSCopy(map);
     }
 
@@ -99,6 +98,7 @@ public class LumaMap extends MapRenderer {
             for (Entry<EntityHuman, WorldMap.WorldMapHumanTracker> ent : worldMap.humans.entrySet()) {
                 WorldMap.WorldMapHumanTracker tracker = ent.getValue();
                 EntityHuman human = ent.getKey();
+                
                 Packet<?> packet = tracker.a(mapItem);
                 if (packet != null && human instanceof EntityPlayer) {
                     EntityPlayer ep = (EntityPlayer) human;
