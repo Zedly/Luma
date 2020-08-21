@@ -7,7 +7,7 @@ package zedly.luma;
 
 import java.lang.reflect.Field;
 import java.util.List;
-import net.minecraft.server.v1_15_R1.WorldMap;
+import net.minecraft.server.v1_16_R2.WorldMap;
 import org.bukkit.map.MapCanvas;
 import org.bukkit.map.MapCursorCollection;
 

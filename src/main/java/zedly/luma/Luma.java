@@ -35,16 +35,17 @@ public class Luma extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        lazyFileLoader = new ThreadAsyncLazyFileLoader();
         getDataFolder().mkdir();
         new File(getDataFolder(), "images").mkdir();
         if(!loadResources()) {
             Bukkit.getPluginManager().disablePlugin(this);
+            return;
         }
         Settings.loadConfigYml();
         CanvasManager.loadDataYml();
         int taskid = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, Synchronizer.instance(), 1, 1);
         Synchronizer.setTaskId(taskid);
-        lazyFileLoader = new ThreadAsyncLazyFileLoader();
         lazyFileLoader.start();
         Bukkit.getPluginManager().registerEvents(Watcher.instance(), this);
         CanvasManager.taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, CanvasManager::advanceFrames, 1, 1);
