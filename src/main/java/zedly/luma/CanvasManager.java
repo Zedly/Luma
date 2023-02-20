@@ -59,7 +59,6 @@ public class CanvasManager {
         ArrayList<LumaMap> newMaps = new ArrayList<>();
         LumaCanvas canvas = new LumaCanvas(name, baseId, width, height, 20, newMaps);
         canvas.setData(frames, data);
-        canvas.setDelay(20);
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 MapView mapView = views.get(width * y + x);
