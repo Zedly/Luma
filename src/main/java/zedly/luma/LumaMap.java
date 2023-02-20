@@ -2,17 +2,19 @@ package zedly.luma;
 
 import java.lang.reflect.Field;
 import java.util.Map.Entry;
-import net.minecraft.server.v1_15_R1.EntityHuman;
-import net.minecraft.server.v1_15_R1.EntityPlayer;
-import net.minecraft.server.v1_15_R1.Packet;
-import net.minecraft.server.v1_15_R1.WorldMap;
+import java.util.Objects;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.server.level.EntityPlayer;
+import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.saveddata.maps.WorldMap;
+//import net.minecraft.server.v1_16_R2.Packet;
+//import net.minecraft.server.v1_16_R2.WorldMap;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_15_R1.map.CraftMapView;
+import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_18_R2.map.CraftMapView;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.map.*;
@@ -33,7 +35,7 @@ public class LumaMap extends MapRenderer {
 
     // NMS Code for high FPS gifs
     private final MapView view;
-    private final net.minecraft.server.v1_15_R1.ItemStack mapItem;
+    private final ItemStack mapItem; //net.minecraft.server.v1_16_R2.ItemStack mapItem;
     private static Field worldMapField;
     private static boolean nmsEnabled = false;
 
@@ -44,8 +46,8 @@ public class LumaMap extends MapRenderer {
         this.view = view;
         this.mapId = view.getId();
 
-        ItemStack map = new ItemStack(Material.FILLED_MAP, 1);
-        ItemMeta meta = map.getItemMeta();
+        org.bukkit.inventory.ItemStack map = new org.bukkit.inventory.ItemStack(Material.FILLED_MAP, 1);
+        ItemMeta meta = Objects.requireNonNull(map.getItemMeta());
         MapMeta mapMeta = (MapMeta) meta;
         mapMeta.setMapView(view);
         map.setItemMeta(meta);
@@ -96,13 +98,13 @@ public class LumaMap extends MapRenderer {
         }
         try {
             WorldMap worldMap = (WorldMap) worldMapField.get(view);
-            for (Entry<EntityHuman, WorldMap.WorldMapHumanTracker> ent : worldMap.humans.entrySet()) {
+            for (Entry<EntityHuman, WorldMap.WorldMapHumanTracker> ent : worldMap.o.entrySet()) {
                 WorldMap.WorldMapHumanTracker tracker = ent.getValue();
                 EntityHuman human = ent.getKey();
-                Packet<?> packet = tracker.a(mapItem);
+                Packet<?> packet = worldMap.a(mapId, human);
                 if (packet != null && human instanceof EntityPlayer) {
                     EntityPlayer ep = (EntityPlayer) human;
-                    ep.playerConnection.networkManager.sendPacket(packet);
+                    ep.b.a.a(packet);
                 }
             }
         } catch (Exception ex) {
