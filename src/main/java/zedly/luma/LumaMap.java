@@ -8,11 +8,9 @@ import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.entity.player.EntityHuman;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.saveddata.maps.WorldMap;
-//import net.minecraft.server.v1_16_R2.Packet;
-//import net.minecraft.server.v1_16_R2.WorldMap;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_18_R2.map.CraftMapView;
+import org.bukkit.craftbukkit.v1_19_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_19_R3.map.CraftMapView;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -104,7 +102,7 @@ public class LumaMap extends MapRenderer {
                 Packet<?> packet = worldMap.a(mapId, human);
                 if (packet != null && human instanceof EntityPlayer) {
                     EntityPlayer ep = (EntityPlayer) human;
-                    ep.b.a.a(packet);
+                    ep.b.a(packet);
                 }
             }
         } catch (Exception ex) {
